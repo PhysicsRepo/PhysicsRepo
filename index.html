@@ -87,7 +87,7 @@
             <div class="flex items-center justify-between bg-physics-panel border border-physics-border px-3 py-2 rounded-xl text-xs font-mono">
                 <span class="flex items-center gap-2 text-gray-400">
                     <span id="sb-status-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span id="sb-status-text" class="text-[11px] text-gray-300">Supabase Connected</span>
+                    <span id="sb-status-text" class="text-[11px] text-gray-300">Connected to PhysicsRepo Lab</span>
                 </span>
                 <button type="button" onclick="toggleConfigModal()" class="text-physics-cyan hover:underline text-[11px] flex items-center gap-1">
                     <i class="fa-solid fa-gear"></i> Keys
@@ -98,11 +98,11 @@
             <div id="sb-config-box" class="hidden bg-physics-panel/90 border border-physics-border p-3 rounded-xl space-y-2 text-xs font-mono">
                 <div>
                     <label class="block text-[10px] text-gray-400 mb-0.5">Supabase Project URL</label>
-                    <input type="text" id="cfg-sb-url" placeholder="https://xyz.supabase.co" class="w-full bg-physics-dark border border-physics-border rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-physics-cyan">
+                    <input type="text" id="cfg-sb-url" placeholder="https://czsryegesatkwdobomrc.supabase.co" class="w-full bg-physics-dark border border-physics-border rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-physics-cyan">
                 </div>
                 <div>
                     <label class="block text-[10px] text-gray-400 mb-0.5">Supabase Anon Key</label>
-                    <input type="password" id="cfg-sb-key" placeholder="eyJh..." class="w-full bg-physics-dark border border-physics-border rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-physics-cyan">
+                    <input type="password" id="cfg-sb-key" placeholder="sb_publishable_5xD1RpPOGXwHpHGWdlnJqg_n37qlmGq" class="w-full bg-physics-dark border border-physics-border rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-physics-cyan">
                 </div>
                 <div class="flex justify-end gap-2 pt-1">
                     <button type="button" onclick="saveSupabaseConfig()" class="px-3 py-1 bg-physics-cyan text-slate-950 rounded-lg font-bold text-[11px]">Save Keys</button>
@@ -161,9 +161,9 @@
                 <div>
                     <label class="block text-xs font-mono text-gray-400 mb-1">Grade / Level</label>
                     <select id="reg-grade" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
-                        <option>AP Physics 1 / High School Junior</option>
-                        <option>AP Physics C / Senior</option>
-                        <option>General High School Physics</option>
+                        <option>Class 11th</option>
+                        <option>Class 12th</option>
+                        <option>Target JEE/NEET</option>
                     </select>
                 </div>
 
@@ -184,7 +184,7 @@
                 </div>
 
                 <button type="submit" id="btn-submit-register" class="w-full py-3 rounded-xl bg-gradient-to-r from-physics-purple to-pink-600 font-bold text-white text-sm hover:brightness-110 transition-all shadow-lg shadow-physics-purple/20 flex items-center justify-center gap-2">
-                    <span>Create Supabase Profile</span> <i class="fa-solid fa-user-plus ml-1"></i>
+                    <span>Create Profile</span> <i class="fa-solid fa-user-plus ml-1"></i>
                 </button>
             </form>
 
