@@ -85,56 +85,68 @@
                 <button id="tab-login-btn" onclick="switchAuthTab('login')" class="w-1/2 py-2 text-center text-physics-cyan border-b-2 border-physics-cyan font-semibold">Student Login</button>
                 <button id="tab-register-btn" onclick="switchAuthTab('register')" class="w-1/2 py-2 text-center text-gray-400 border-b-2 border-transparent hover:text-gray-200">New Account</button>
             </div>
-
-            <!-- Login Form -->
-            <form id="form-login" onsubmit="handleAuth(event, 'login')" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-mono text-gray-400 mb-1">Student Email / ID</label>
-                    <div class="relative">
-                        <i class="fa-solid fa-user absolute left-3 top-3 text-gray-500 text-sm"></i>
-                        <input type="email" id="login-email" required placeholder="student@physics.edu" value="alex.student@physics.edu" class="w-full bg-physics-panel border border-physics-border rounded-xl pl-9 pr-3 py-2 text-sm text-white focus:outline-none focus:border-physics-cyan">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs font-mono text-gray-400 mb-1">Password</label>
-                    <div class="relative">
-                        <i class="fa-solid fa-lock absolute left-3 top-3 text-gray-500 text-sm"></i>
-                        <input type="password" id="login-pass" required value="physics123" class="w-full bg-physics-panel border border-physics-border rounded-xl pl-9 pr-3 py-2 text-sm text-white focus:outline-none focus:border-physics-cyan">
-                    </div>
-                </div>
-                <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-physics-cyan to-blue-600 font-bold text-slate-950 text-sm hover:brightness-110 transition-all shadow-lg shadow-physics-cyan/20">
-                    Enter Physics Portal <i class="fa-solid fa-arrow-right ml-1"></i>
-                </button>
-            </form>
-
-            <!-- Registration Form -->
-            <form id="form-register" onsubmit="handleAuth(event, 'register')" class="space-y-4 hidden">
-                <div>
-                    <label class="block text-xs font-mono text-gray-400 mb-1">Full Name</label>
-                    <input type="text" id="reg-name" required placeholder="Alex Morgan" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
-                </div>
-                <div>
-                    <label class="block text-xs font-mono text-gray-400 mb-1">Grade / Level</label>
-                    <select id="reg-grade" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
-                        <option>AP Physics 1 / High School Junior</option>
-                        <option>AP Physics C / Senior</option>
-                        <option>General High School Physics</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-mono text-gray-400 mb-1">Email Address</label>
-                    <input type="email" id="reg-email" required placeholder="student@school.edu" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
-                </div>
-                <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-physics-purple to-pink-600 font-bold text-white text-sm hover:brightness-110 transition-all shadow-lg shadow-physics-purple/20">
-                    Create Student Profile
-                </button>
-            </form>
-
-            <div class="text-center">
-                <button onclick="guestLogin()" class="text-xs text-gray-400 hover:text-physics-cyan underline">Or continue as Guest Student</button>
+<!-- QUANTUM LAB AUTHENTICATION SYSTEM -->
+<div class="auth-wrapper">
+    
+    <!-- LOGIN INTERFACE -->
+    <div id="loginCard" class="auth-card">
+        <h2>Student Login</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="loginEmail">Student Email / ID</label>
+                <input type="email" id="loginEmail" placeholder="alex.student@physics.edu" required>
             </div>
-        </div>
+            <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Enter Physics Portal</button>
+        </form>
+        <p class="toggle-text">New to the portal? <a href="#" id="showRegister">Create an account</a></p>
     </div>
+
+    <!-- REGISTRATION INTERFACE -->
+    <div id="registerCard" class="auth-card hidden">
+        <h2>Create Student Profile</h2>
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="regFullName">Full Name</label>
+                <input type="text" id="regFullName" placeholder="Alex Morgan" required>
+            </div>
+            <div class="form-group">
+                <label for="regEmail">Email Address</label>
+                <input type="email" id="regEmail" placeholder="alex.student@physics.edu" required>
+            </div>
+            <!-- MOBILE NUMBER FIELD -->
+            <div class="form-group">
+                <label for="regMobile">Mobile Number</label>
+                <input type="tel" id="regMobile" placeholder="+91 98765 43210" required>
+            </div>
+            <div class="form-group">
+                <label for="regGrade">Grade / Level</label>
+                <select id="regGrade">
+                    <option value="AP Physics 1">AP Physics 1 / High School Junior</option>
+                    <option value="AP Physics C">AP Physics C / Senior</option>
+                    <option value="General Physics">General High School Physics</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="regPassword">Password</label>
+                <input type="password" id="regPassword" placeholder="Minimum 6 characters" minlength="6" required>
+            </div>
+            <button type="submit" class="btn btn-success">Create Profile & Database Record</button>
+        </form>
+        <p class="toggle-text">Already have an account? <a href="#" id="showLogin">Back to Login</a></p>
+    </div>
+
+    <!-- DYNAMIC STATUS PANEL -->
+    <div id="authStatus" class="auth-notification hidden"></div>
+</div>
+
+<!-- Include Supabase JS Client Libraries right before your custom script -->
+<script src="https://jsdelivr.net"></script>
+<script src="auth.js"></script>
+
 
     <!-- 2. APP HEADER & NAVIGATION -->
     <header class="sticky top-0 z-40 bg-physics-dark/95 backdrop-blur-md border-b border-physics-border px-4 lg:px-8 py-3">
@@ -694,7 +706,7 @@
     <!-- FOOTER -->
     <footer class="bg-physics-dark border-t border-physics-border py-4 px-4 mt-auto">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 gap-2">
-            <div>QuantumLab Interactive Physics Suite • High School STEM Curriculum</div>
+            <div>PhysicsRepo Interactive Physics Suite • High School STEM Curriculum</div>
             <div class="font-mono text-physics-cyan">Active Session: Logged in</div>
         </div>
     </footer>
