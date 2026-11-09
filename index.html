@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PhysicsRepo - High School Interactive Platform</title>
+    <title>PhysicsRepo</title>
 
-    <!-- Correct Tailwind CSS Play CDN Script Loading -->
+    <!-- Tailwind CSS Dynamic CDN (Using Secure HTTPS) -->
     <script src="https://tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -27,23 +27,23 @@
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace']
+                        mono: ['JetBrains Mono', 'Fira Code', 'monospace']
                     }
                 }
             }
         }
     </script>
 
-    <!-- Google Fonts & FontAwesome Icons -->
+    <!-- Google Fonts & FontAwesome Icons Package -->
     <link rel="preconnect" href="https://googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link href="https://googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cloudflare.com">
 
-    <!-- MathJax for TeX equations -->
+    <!-- MathJax for rendering physics equations cleanly -->
     <script>
         window.MathJax = {
-            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']] },
             svg: { fontCache: 'global' }
         };
     </script>
@@ -53,91 +53,91 @@
         body { font-family: 'Inter', sans-serif; background-color: #070A13; color: #F3F4F6; }
         input[type=range] { -webkit-appearance: none; background: #1E293B; height: 6px; border-radius: 4px; }
         input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%;
+            -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%;
             background: #06B6D4; cursor: pointer; box-shadow: 0 0 10px rgba(6, 182, 212, 0.7);
+            transition: transform 0.1s ease;
         }
+        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.25); }
         canvas { touch-action: none; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #070A13; }
+        ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 3px; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-physics-cyan selection:text-black">
 
     <!-- 1. AUTHENTICATION OVERLAY / MODAL GATE -->
     <div id="auth-overlay" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
-        <div class="bg-physics-card border border-physics-border max-w-md w-full rounded-2xl p-6 shadow-2xl space-y-5 relative">
+        <div class="bg-physics-card border border-physics-border max-w-md w-full rounded-2xl p-6 lg:p-8 shadow-2xl space-y-6 relative">
             
-            <div class="text-center space-y-1">
-                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-physics-cyan to-physics-purple p-0.5 mx-auto flex items-center justify-center">
-                    <div class="w-full h-full bg-physics-dark rounded-[10px] flex items-center justify-center">
-                        <i class="fa-solid fa-atom text-physics-cyan text-xl"></i>
+            <div class="text-center space-y-2">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-physics-cyan to-physics-purple p-0.5 mx-auto flex items-center justify-center shadow-lg shadow-physics-cyan/30">
+                    <div class="w-full h-full bg-physics-dark rounded-[14px] flex items-center justify-center">
+                        <i class="fa-solid fa-atom text-physics-cyan text-2xl"></i>
                     </div>
                 </div>
-                <h2 class="text-xl font-bold text-white tracking-tight">PhysicsRepo</h2>
+                <h2 class="text-2xl font-bold text-white tracking-tight">PhysicsRepo</h2>
                 <p class="text-xs text-gray-400">Interactive High School Physics Simulations Platform</p>
             </div>
 
-            <!-- Tab Buttons -->
-            <div class="flex border-b border-gray-800 text-xs font-mono">
+            <!-- Tab Buttons (Login vs Register) -->
+            <div class="flex border-b border-gray-800 text-sm font-medium">
                 <button id="tab-login-btn" onclick="switchAuthTab('login')" class="w-1/2 py-2 text-center text-physics-cyan border-b-2 border-physics-cyan font-semibold">Student Login</button>
                 <button id="tab-register-btn" onclick="switchAuthTab('register')" class="w-1/2 py-2 text-center text-gray-400 border-b-2 border-transparent hover:text-gray-200">New Account</button>
             </div>
 
             <!-- Login Form -->
-            <form id="form-login" class="space-y-3 text-xs">
+            <form id="form-login" class="space-y-4">
                 <div>
-                    <label class="block text-gray-400 mb-1 font-mono">Student Email / ID</label>
-                    <input type="email" id="login-email" required value="alex.student@physics.edu" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-white focus:outline-none focus:border-physics-cyan">
+                    <label class="block text-xs font-mono text-gray-400 mb-1">Student Email / ID</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-user absolute left-3 top-3 text-gray-500 text-sm"></i>
+                        <input type="email" id="login-email" required placeholder="student@physics.edu" value="alex.student@physics.edu" class="w-full bg-physics-panel border border-physics-border rounded-xl pl-9 pr-3 py-2 text-sm text-white focus:outline-none focus:border-physics-cyan">
+                    </div>
                 </div>
                 <div>
-                    <label class="block text-gray-400 mb-1 font-mono">Password</label>
-                    <input type="password" id="login-pass" required value="physics123" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-white focus:outline-none focus:border-physics-cyan">
+                    <label class="block text-xs font-mono text-gray-400 mb-1">Password</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-3 top-3 text-gray-500 text-sm"></i>
+                        <input type="password" id="login-pass" required value="physics123" class="w-full bg-physics-panel border border-physics-border rounded-xl pl-9 pr-3 py-2 text-sm text-white focus:outline-none focus:border-physics-cyan">
+                    </div>
                 </div>
-                <button type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-physics-cyan to-blue-600 font-bold text-slate-950 shadow-md transition-all hover:brightness-110">
+                <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-physics-cyan to-blue-600 font-bold text-slate-950 text-sm hover:brightness-110 transition-all shadow-lg shadow-physics-cyan/20">
                     Enter Physics Portal <i class="fa-solid fa-arrow-right ml-1"></i>
                 </button>
             </form>
 
-            <!-- Registration Form with Mobile Field -->
-            <form id="form-register" class="space-y-3 text-xs hidden">
+            <!-- Registration Form -->
+            <form id="form-register" class="space-y-4 hidden">
                 <div>
-                    <label class="block text-gray-400 mb-1 font-mono">Full Name</label>
-                    <input type="text" id="reg-name" required placeholder="Alex Morgan" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-white focus:outline-none focus:border-physics-purple">
+                    <label class="block text-xs font-mono text-gray-400 mb-1">Full Name</label>
+                    <input type="text" id="reg-name" required placeholder="Alex Morgan" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
                 </div>
-                
-                <!-- MOBILE NUMBER FIELD -->
                 <div>
-                    <label class="block text-gray-400 mb-1 font-mono">Mobile Number</label>
-                    <input type="tel" id="reg-mobile" required placeholder="+91 98765 43210" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-white focus:outline-none focus:border-physics-purple">
+                    <label class="block text-xs font-mono text-gray-400 mb-1">Mobile Number</label>
+                    <input type="tel" id="reg-mobile" required placeholder="+91 98765 43210" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
                 </div>
-
                 <div>
-                    <label class="block text-gray-400 mb-1 font-mono">Grade / Level</label>
-                    <select id="reg-grade" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-white focus:outline-none">
+                    <label class="block text-xs font-mono text-gray-400 mb-1">Grade / Level</label>
+                    <select id="reg-grade" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
                         <option>AP Physics 1 / High School Junior</option>
                         <option>AP Physics C / Senior</option>
                         <option>General High School Physics</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-gray-400 mb-1 font-mono">Email Address</label>
-                    <input type="email" id="reg-email" required placeholder="student@school.edu" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-white focus:outline-none">
+                    <label class="block text-xs font-mono text-gray-400 mb-1">Email Address</label>
+                    <input type="email" id="reg-email" required placeholder="student@school.edu" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
                 </div>
                 <div>
-                    <label class="block text-gray-400 mb-1 font-mono">Password</label>
-                    <input type="password" id="reg-pass" required placeholder="Min 6 characters" minlength="6" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-white focus:outline-none">
+                    <label class="block text-xs font-mono text-gray-400 mb-1">Password</label>
+                    <input type="password" id="reg-pass" required placeholder="Minimum 6 characters" minlength="6" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
                 </div>
-                <button type="submit" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-physics-purple to-pink-600 font-bold text-white shadow-lg transition-all hover:brightness-110">
+                <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-physics-purple to-pink-600 font-bold text-white text-sm hover:brightness-110 transition-all shadow-lg shadow-physics-purple/20">
                     Create Student Profile
                 </button>
             </form>
 
-            <div id="auth-status-msg" class="text-xs font-mono text-center hidden p-2 rounded-xl border"></div>
-            <div class="text-center"><button onclick="guestLogin()" class="text-xs text-gray-400 hover:text-physics-cyan underline">Or continue as Guest Student</button></div>
-        </div>
-    </div>
-
-   
-
-            <!-- Live Supabase Operational Error & Success Messaging Box Container -->
             <div id="auth-status-msg" class="text-xs font-mono text-center hidden p-2.5 rounded-xl border"></div>
 
             <div class="text-center">
@@ -149,7 +149,6 @@
     <!-- 2. APP HEADER & NAVIGATION -->
     <header class="sticky top-0 z-40 bg-physics-dark/95 backdrop-blur-md border-b border-physics-border px-4 lg:px-8 py-3">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
-            
             
             <!-- Brand Logo -->
             <div onclick="navigateTo('dashboard')" class="flex items-center space-x-3 cursor-pointer">
