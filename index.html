@@ -94,8 +94,8 @@
 
             <!-- Tab Buttons (Login vs Register) -->
             <div class="flex border-b border-gray-800 text-sm font-medium">
-                <button id="showLogin" class="w-1/2 py-2 text-center text-physics-cyan border-b-2 border-physics-cyan font-semibold">Student Login</button>
-                <button id="showRegister" class="w-1/2 py-2 text-center text-gray-400 border-b-2 border-transparent hover:text-gray-200">New Account</button>
+                <button id="showLogin" type="button" onclick="switchAuthTab('login')" class="w-1/2 py-2 text-center text-physics-cyan border-b-2 border-physics-cyan font-semibold transition-all">Student Login</button>
+                <button id="showRegister" type="button" onclick="switchAuthTab('register')" class="w-1/2 py-2 text-center text-gray-400 border-b-2 border-transparent hover:text-gray-200 transition-all">New Account</button>
             </div>
 
             <!-- Live Status Alert Box (authStatus) -->
@@ -758,13 +758,47 @@ ho_{	ext{object}}$)</span><span id="lbl-block-rho" class="text-physics-purple fo
     <!-- JAVASCRIPT APP ENGINE & SUPABASE AUTH INTEGRATION -->
     <script>
         // =========================================================================
-        // 1. SUPABASE AUTH & SQL PROFILES INTEGRATION (from auth.js)
+        // 1. GLOBAL TAB SWITCHER & UI TOGGLES (Guaranteed to execute immediately)
+        // =========================================================================
+        function switchAuthTab(tab) {
+            const loginCard = document.getElementById('loginCard');
+            const registerCard = document.getElementById('registerCard');
+            const showRegisterBtn = document.getElementById('showRegister');
+            const showLoginBtn = document.getElementById('showLogin');
+
+            if (!loginCard || !registerCard) return;
+
+            if (tab === 'register') {
+                loginCard.classList.add('hidden');
+                registerCard.classList.remove('hidden');
+                if (showRegisterBtn) showRegisterBtn.className = "w-1/2 py-2 text-center text-physics-purple border-b-2 border-physics-purple font-semibold transition-all";
+                if (showLoginBtn) showLoginBtn.className = "w-1/2 py-2 text-center text-gray-400 border-b-2 border-transparent hover:text-gray-200 transition-all";
+            } else {
+                registerCard.classList.add('hidden');
+                loginCard.classList.remove('hidden');
+                if (showLoginBtn) showLoginBtn.className = "w-1/2 py-2 text-center text-physics-cyan border-b-2 border-physics-cyan font-semibold transition-all";
+                if (showRegisterBtn) showRegisterBtn.className = "w-1/2 py-2 text-center text-gray-400 border-b-2 border-transparent hover:text-gray-200 transition-all";
+            }
+            clearStatus();
+        }
+
+        // =========================================================================
+        // 2. SUPABASE SAFE INITIALIZATION
         // =========================================================================
         const SUPABASE_URL = "https://czsryegesatkwdobomrc.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6c3J5ZWdlc2F0a3dkb2JvbXJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQyMTIxMTgsImV4cCI6MjEwOTc4ODExOH0.soKMmRLoNUoadMgyqqNl7vVDTNuUzbauRVqXHdtNwS8";
         
-        // Initialize client using window.supabase from CDN
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let supabase = null;
+        function getSupabase() {
+            if (!supabase && window.supabase && typeof window.supabase.createClient === 'function') {
+                try {
+                    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                } catch (e) {
+                    console.error("Supabase client init error:", e);
+                }
+            }
+            return supabase;
+        }
 
         // Active In-Memory User State
         const userState = {
@@ -777,31 +811,7 @@ ho_{	ext{object}}$)</span><span id="lbl-block-rho" class="text-physics-purple fo
             completedLabs: 4
         };
 
-        // DOM Elements
-        const loginCard = document.getElementById('loginCard');
-        const registerCard = document.getElementById('registerCard');
         const authStatus = document.getElementById('authStatus');
-        const showRegisterBtn = document.getElementById('showRegister');
-        const showLoginBtn = document.getElementById('showLogin');
-
-        // Form Toggles
-        showRegisterBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            loginCard.classList.add('hidden');
-            registerCard.classList.remove('hidden');
-            showRegisterBtn.className = "w-1/2 py-2 text-center text-physics-purple border-b-2 border-physics-purple font-semibold";
-            showLoginBtn.className = "w-1/2 py-2 text-center text-gray-400 border-b-2 border-transparent hover:text-gray-200";
-            clearStatus();
-        });
-
-        showLoginBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            registerCard.classList.add('hidden');
-            loginCard.classList.remove('hidden');
-            showLoginBtn.className = "w-1/2 py-2 text-center text-physics-cyan border-b-2 border-physics-cyan font-semibold";
-            showRegisterBtn.className = "w-1/2 py-2 text-center text-gray-400 border-b-2 border-transparent hover:text-gray-200";
-            clearStatus();
-        });
 
         function displayStatus(msg, isError = false) {
             authStatus.innerText = msg;
@@ -820,7 +830,7 @@ ho_{	ext{object}}$)</span><span id="lbl-block-rho" class="text-physics-purple fo
         // Automatic Supabase Session Check on Load
         async function checkSupabaseSession() {
             try {
-                const { data: { session }, error } = await supabase.auth.getSession();
+                const sb = getSupabase(); if (!sb) return; const { data: { session }, error } = await sb.auth.getSession();
                 if (session && session.user) {
                     await loadUserProfile(session.user);
                     userState.isLoggedIn = true;
@@ -838,7 +848,8 @@ ho_{	ext{object}}$)</span><span id="lbl-block-rho" class="text-physics-purple fo
             userState.email = authUser.email;
 
             try {
-                const { data, error } = await supabase
+                const sb = getSupabase(); if (!sb) return;
+                const { data, error } = await sb
                     .from('profiles')
                     .select('*')
                     .eq('id', authUser.id)
@@ -876,7 +887,9 @@ ho_{	ext{object}}$)</span><span id="lbl-block-rho" class="text-physics-purple fo
 
             try {
                 // Step A: Sign up user inside Supabase Auth Engine
-                const { data: authData, error: authError } = await supabase.auth.signUp({
+                const sb = getSupabase();
+                if (!sb) { displayStatus('Supabase library is still loading. Please check your internet connection.', true); btnReg.disabled = false; btnReg.innerHTML = origText; return; }
+                const { data: authData, error: authError } = await sb.auth.signUp({
                     email: email,
                     password: password,
                     options: {
@@ -897,7 +910,7 @@ ho_{	ext{object}}$)</span><span id="lbl-block-rho" class="text-physics-purple fo
 
                 if (authData.user) {
                     // Step B: Map structural relational record into the profiles SQL table
-                    const { error: dbError } = await supabase
+                    const { error: dbError } = await sb
                         .from('profiles')
                         .insert([
                             { 
@@ -951,7 +964,9 @@ ho_{	ext{object}}$)</span><span id="lbl-block-rho" class="text-physics-purple fo
             btnLogin.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Verifying...';
 
             try {
-                const { data, error } = await supabase.auth.signInWithPassword({
+                const sb = getSupabase();
+                if (!sb) { displayStatus('Supabase library is still loading. Please check your internet connection.', true); btnLogin.disabled = false; btnLogin.innerHTML = origText; return; }
+                const { data, error } = await sb.auth.signInWithPassword({
                     email: email,
                     password: password,
                 });
@@ -987,7 +1002,7 @@ ho_{	ext{object}}$)</span><span id="lbl-block-rho" class="text-physics-purple fo
 
         async function logout() {
             try {
-                await supabase.auth.signOut();
+                const sb = getSupabase(); if (sb) await sb.auth.signOut();
             } catch(e) {
                 console.log('Signout notice:', e.message);
             }
