@@ -109,36 +109,46 @@
 
             <!-- Registration Form (Wired for database columns tracking) -->
             <form id="form-register" class="space-y-4 hidden">
-                <div>
-                    <label class="block text-xs font-mono text-gray-400 mb-1">Full Name</label>
-                    <input type="text" id="reg-name" required placeholder="Alex Morgan" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
-                </div>
-                
-                <!-- MOBILE NUMBER INPUT COMPONENT INTERFACE -->
-                <div>
-                    <label class="block text-xs font-mono text-gray-400 mb-1">Mobile Number</label>
-                    <input type="tel" id="reg-mobile" required placeholder="+91 98765 43210" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
-                </div>
+                const registerForm = document.getElementById('form-register');
+if (registerForm) {
+    registerForm.innerHTML = `
+        <div class="space-y-4">
+            <div>
+                <label class="block text-xs font-mono text-gray-400 mb-1">Full Name</label>
+                <input type="text" id="reg-name" required placeholder="Alex Morgan" class="w-full bg-[#0F172A] border border-[#1E293B] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#A855F7]">
+            </div>
+            
+            <div>
+                <label class="block text-xs font-mono text-gray-400 mb-1">Mobile Number</label>
+                <input type="tel" id="reg-mobile" required placeholder="+91 98765 43210" class="w-full bg-[#0F172A] border border-[#1E293B] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#A855F7]">
+            </div>
 
-                <div>
-                    <label class="block text-xs font-mono text-gray-400 mb-1">Grade / Level</label>
-                    <select id="reg-grade" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
-                        <option>AP Physics 1 / High School Junior</option>
-                        <option>AP Physics C / Senior</option>
-                        <option>General High School Physics</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-mono text-gray-400 mb-1">Email Address</label>
-                    <input type="email" id="reg-email" required placeholder="student@school.edu" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
-                </div>
-                <div>
-                    <label class="block text-xs font-mono text-gray-400 mb-1">Password</label>
-                    <input type="password" id="reg-pass" required placeholder="Minimum 6 characters" minlength="6" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
-                </div>
-                <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-physics-purple to-pink-600 font-bold text-white text-sm hover:brightness-110 transition-all shadow-lg shadow-physics-purple/20">
-                    Create Student Profile
-                </button>
+            <div>
+                <label class="block text-xs font-mono text-gray-400 mb-1">Grade / Level</label>
+                <select id="reg-grade" class="w-full bg-[#0F172A] border border-[#1E293B] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#A855F7]">
+                    <option>AP Physics 1 / High School Junior</option>
+                    <option>AP Physics C / Senior</option>
+                    <option>General High School Physics</option>
+                </select>
+            </div>
+            
+            <div>
+                <label class="block text-xs font-mono text-gray-400 mb-1">Email Address</label>
+                <input type="email" id="reg-email" required placeholder="student@school.edu" class="w-full bg-[#0F172A] border border-[#1E293B] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#A855F7]">
+            </div>
+            
+            <div>
+                <label class="block text-xs font-mono text-gray-400 mb-1">Password</label>
+                <input type="password" id="reg-pass" required placeholder="Minimum 6 characters" minlength="6" class="w-full bg-[#0F172A] border border-[#1E293B] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#A855F7]">
+            </div>
+            
+            <button type="submit" class="w-full py-3 mt-2 rounded-xl bg-gradient-to-r from-[#A855F7] to-[#EC4899] font-bold text-white text-sm hover:brightness-110 transition-all shadow-lg shadow-purple-500/20">
+                Create Student Profile
+            </button>
+        </div>
+    `;
+ 
+
             </form>
 
             <!-- Live Supabase Operational Error & Success Messaging Box Container -->
