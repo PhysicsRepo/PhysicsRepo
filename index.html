@@ -6,7 +6,7 @@
     <title>PhysicsRepo Physics Academy</title>
 
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -35,10 +35,10 @@
     </script>
 
     <!-- Google Fonts & FontAwesome Icons -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cloudflare.com">
 
     <!-- MathJax for TeX equations -->
     <script>
@@ -47,7 +47,7 @@
             svg: { fontCache: 'global' }
         };
     </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script id="MathJax-script" async src="https://jsdelivr.net"></script>
 
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #070A13; color: #F3F4F6; }
@@ -86,8 +86,8 @@
                 <button id="tab-register-btn" onclick="switchAuthTab('register')" class="w-1/2 py-2 text-center text-gray-400 border-b-2 border-transparent hover:text-gray-200">New Account</button>
             </div>
 
-            <!-- Login Form -->
-            <form id="form-login" onsubmit="handleAuth(event, 'login')" class="space-y-4">
+            <!-- Login Form (Wired for external JS listener controls) -->
+            <form id="form-login" class="space-y-4">
                 <div>
                     <label class="block text-xs font-mono text-gray-400 mb-1">Student Email / ID</label>
                     <div class="relative">
@@ -107,12 +107,19 @@
                 </button>
             </form>
 
-            <!-- Registration Form -->
-            <form id="form-register" onsubmit="handleAuth(event, 'register')" class="space-y-4 hidden">
+            <!-- Registration Form (Wired for database columns tracking) -->
+            <form id="form-register" class="space-y-4 hidden">
                 <div>
                     <label class="block text-xs font-mono text-gray-400 mb-1">Full Name</label>
                     <input type="text" id="reg-name" required placeholder="Alex Morgan" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
                 </div>
+                
+                <!-- MOBILE NUMBER INPUT COMPONENT INTERFACE -->
+                <div>
+                    <label class="block text-xs font-mono text-gray-400 mb-1">Mobile Number</label>
+                    <input type="tel" id="reg-mobile" required placeholder="+91 98765 43210" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
+                </div>
+
                 <div>
                     <label class="block text-xs font-mono text-gray-400 mb-1">Grade / Level</label>
                     <select id="reg-grade" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
@@ -125,10 +132,17 @@
                     <label class="block text-xs font-mono text-gray-400 mb-1">Email Address</label>
                     <input type="email" id="reg-email" required placeholder="student@school.edu" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
                 </div>
+                <div>
+                    <label class="block text-xs font-mono text-gray-400 mb-1">Password</label>
+                    <input type="password" id="reg-pass" required placeholder="Minimum 6 characters" minlength="6" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
+                </div>
                 <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-physics-purple to-pink-600 font-bold text-white text-sm hover:brightness-110 transition-all shadow-lg shadow-physics-purple/20">
                     Create Student Profile
                 </button>
             </form>
+
+            <!-- Live Supabase Operational Error & Success Messaging Box Container -->
+            <div id="auth-status-msg" class="text-xs font-mono text-center hidden p-2.5 rounded-xl border"></div>
 
             <div class="text-center">
                 <button onclick="guestLogin()" class="text-xs text-gray-400 hover:text-physics-cyan underline">Or continue as Guest Student</button>
@@ -139,6 +153,7 @@
     <!-- 2. APP HEADER & NAVIGATION -->
     <header class="sticky top-0 z-40 bg-physics-dark/95 backdrop-blur-md border-b border-physics-border px-4 lg:px-8 py-3">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
+            
             
             <!-- Brand Logo -->
             <div onclick="navigateTo('dashboard')" class="flex items-center space-x-3 cursor-pointer">
@@ -1306,6 +1321,10 @@
 
             requestAnimationFrame(mainAnimationLoop);
         }
+
+ <!-- OFFICIAL SUPABASE DATABASE CLIENT LIBRARY ASSET PATH -->
+    <script src="https://jsdelivr.net"></script>
+    <script src="auth.js"></script>
     </script>
 </body>
 </html>
