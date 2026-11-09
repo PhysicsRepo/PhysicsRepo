@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PhysicsRepo</title>
+    <title>PhysicsRepo Physics Academy</title>
 
-    <!-- Tailwind CSS Dynamic CDN (Using Secure HTTPS) -->
-    <script src="https://tailwindcss.com"></script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -34,20 +34,23 @@
         }
     </script>
 
-    <!-- Google Fonts & FontAwesome Icons Package -->
-    <link rel="preconnect" href="https://googleapis.com">
-    <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cloudflare.com">
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <!-- MathJax for rendering physics equations cleanly -->
+    <!-- Google Fonts & FontAwesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- MathJax for TeX equations -->
     <script>
         window.MathJax = {
             tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']] },
             svg: { fontCache: 'global' }
         };
     </script>
-    <script id="MathJax-script" async src="https://jsdelivr.net"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #070A13; color: #F3F4F6; }
@@ -68,7 +71,7 @@
 
     <!-- 1. AUTHENTICATION OVERLAY / MODAL GATE -->
     <div id="auth-overlay" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
-        <div class="bg-physics-card border border-physics-border max-w-md w-full rounded-2xl p-6 lg:p-8 shadow-2xl space-y-6 relative">
+        <div class="bg-physics-card border border-physics-border max-w-md w-full rounded-2xl p-6 lg:p-8 shadow-2xl space-y-5 relative">
             
             <div class="text-center space-y-2">
                 <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-physics-cyan to-physics-purple p-0.5 mx-auto flex items-center justify-center shadow-lg shadow-physics-cyan/30">
@@ -80,43 +83,81 @@
                 <p class="text-xs text-gray-400">Interactive High School Physics Simulations Platform</p>
             </div>
 
+            <!-- Supabase Config Status Badge / Toggle -->
+            <div class="flex items-center justify-between bg-physics-panel border border-physics-border px-3 py-2 rounded-xl text-xs font-mono">
+                <span class="flex items-center gap-2 text-gray-400">
+                    <span id="sb-status-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span id="sb-status-text" class="text-[11px] text-gray-300">Supabase Connected</span>
+                </span>
+                <button type="button" onclick="toggleConfigModal()" class="text-physics-cyan hover:underline text-[11px] flex items-center gap-1">
+                    <i class="fa-solid fa-gear"></i> Keys
+                </button>
+            </div>
+
+            <!-- Supabase Credentials Drawer -->
+            <div id="sb-config-box" class="hidden bg-physics-panel/90 border border-physics-border p-3 rounded-xl space-y-2 text-xs font-mono">
+                <div>
+                    <label class="block text-[10px] text-gray-400 mb-0.5">Supabase Project URL</label>
+                    <input type="text" id="cfg-sb-url" placeholder="https://xyz.supabase.co" class="w-full bg-physics-dark border border-physics-border rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-physics-cyan">
+                </div>
+                <div>
+                    <label class="block text-[10px] text-gray-400 mb-0.5">Supabase Anon Key</label>
+                    <input type="password" id="cfg-sb-key" placeholder="eyJh..." class="w-full bg-physics-dark border border-physics-border rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-physics-cyan">
+                </div>
+                <div class="flex justify-end gap-2 pt-1">
+                    <button type="button" onclick="saveSupabaseConfig()" class="px-3 py-1 bg-physics-cyan text-slate-950 rounded-lg font-bold text-[11px]">Save Keys</button>
+                </div>
+            </div>
+
             <!-- Tab Buttons (Login vs Register) -->
             <div class="flex border-b border-gray-800 text-sm font-medium">
                 <button id="tab-login-btn" onclick="switchAuthTab('login')" class="w-1/2 py-2 text-center text-physics-cyan border-b-2 border-physics-cyan font-semibold">Student Login</button>
                 <button id="tab-register-btn" onclick="switchAuthTab('register')" class="w-1/2 py-2 text-center text-gray-400 border-b-2 border-transparent hover:text-gray-200">New Account</button>
             </div>
 
+            <!-- Error / Alert Banner -->
+            <div id="auth-alert" class="hidden text-xs p-3 rounded-xl border font-mono"></div>
+
             <!-- Login Form -->
-            <form id="form-login" class="space-y-4">
+            <form id="form-login" onsubmit="handleAuth(event, 'login')" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-mono text-gray-400 mb-1">Student Email / ID</label>
+                    <label class="block text-xs font-mono text-gray-400 mb-1">Student Email</label>
                     <div class="relative">
-                        <i class="fa-solid fa-user absolute left-3 top-3 text-gray-500 text-sm"></i>
-                        <input type="email" id="login-email" required placeholder="student@physics.edu" value="alex.student@physics.edu" class="w-full bg-physics-panel border border-physics-border rounded-xl pl-9 pr-3 py-2 text-sm text-white focus:outline-none focus:border-physics-cyan">
+                        <i class="fa-solid fa-envelope absolute left-3 top-3 text-gray-500 text-sm"></i>
+                        <input type="email" id="login-email" required placeholder="student@physics.edu" class="w-full bg-physics-panel border border-physics-border rounded-xl pl-9 pr-3 py-2 text-sm text-white focus:outline-none focus:border-physics-cyan">
                     </div>
                 </div>
                 <div>
                     <label class="block text-xs font-mono text-gray-400 mb-1">Password</label>
                     <div class="relative">
                         <i class="fa-solid fa-lock absolute left-3 top-3 text-gray-500 text-sm"></i>
-                        <input type="password" id="login-pass" required value="physics123" class="w-full bg-physics-panel border border-physics-border rounded-xl pl-9 pr-3 py-2 text-sm text-white focus:outline-none focus:border-physics-cyan">
+                        <input type="password" id="login-pass" required placeholder="••••••••" class="w-full bg-physics-panel border border-physics-border rounded-xl pl-9 pr-3 py-2 text-sm text-white focus:outline-none focus:border-physics-cyan">
                     </div>
                 </div>
-                <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-physics-cyan to-blue-600 font-bold text-slate-950 text-sm hover:brightness-110 transition-all shadow-lg shadow-physics-cyan/20">
-                    Enter Physics Portal <i class="fa-solid fa-arrow-right ml-1"></i>
+                <button type="submit" id="btn-submit-login" class="w-full py-3 rounded-xl bg-gradient-to-r from-physics-cyan to-blue-600 font-bold text-slate-950 text-sm hover:brightness-110 transition-all shadow-lg shadow-physics-cyan/20 flex items-center justify-center gap-2">
+                    <span>Enter Physics Portal</span> <i class="fa-solid fa-arrow-right ml-1"></i>
                 </button>
             </form>
 
             <!-- Registration Form -->
-            <form id="form-register" class="space-y-4 hidden">
+            <form id="form-register" onsubmit="handleAuth(event, 'register')" class="space-y-3 hidden">
                 <div>
                     <label class="block text-xs font-mono text-gray-400 mb-1">Full Name</label>
-                    <input type="text" id="reg-name" required placeholder="Alex Morgan" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
+                    <div class="relative">
+                        <i class="fa-solid fa-user absolute left-3 top-2.5 text-gray-500 text-sm"></i>
+                        <input type="text" id="reg-name" required placeholder="Alex Morgan" class="w-full bg-physics-panel border border-physics-border rounded-xl pl-9 pr-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
+                    </div>
                 </div>
+
+                <!-- Mobile Number Entry Box -->
                 <div>
                     <label class="block text-xs font-mono text-gray-400 mb-1">Mobile Number</label>
-                    <input type="tel" id="reg-mobile" required placeholder="+91 98765 43210" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
+                    <div class="relative">
+                        <i class="fa-solid fa-phone absolute left-3 top-2.5 text-gray-500 text-sm"></i>
+                        <input type="tel" id="reg-phone" required placeholder="+1 (555) 000-0000" class="w-full bg-physics-panel border border-physics-border rounded-xl pl-9 pr-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple font-mono">
+                    </div>
                 </div>
+
                 <div>
                     <label class="block text-xs font-mono text-gray-400 mb-1">Grade / Level</label>
                     <select id="reg-grade" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
@@ -125,22 +166,29 @@
                         <option>General High School Physics</option>
                     </select>
                 </div>
+
                 <div>
                     <label class="block text-xs font-mono text-gray-400 mb-1">Email Address</label>
-                    <input type="email" id="reg-email" required placeholder="student@school.edu" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
+                    <div class="relative">
+                        <i class="fa-solid fa-envelope absolute left-3 top-2.5 text-gray-500 text-sm"></i>
+                        <input type="email" id="reg-email" required placeholder="student@school.edu" class="w-full bg-physics-panel border border-physics-border rounded-xl pl-9 pr-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
+                    </div>
                 </div>
+
                 <div>
                     <label class="block text-xs font-mono text-gray-400 mb-1">Password</label>
-                    <input type="password" id="reg-pass" required placeholder="Minimum 6 characters" minlength="6" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-3 top-2.5 text-gray-500 text-sm"></i>
+                        <input type="password" id="reg-pass" required minlength="6" placeholder="Min. 6 characters" class="w-full bg-physics-panel border border-physics-border rounded-xl pl-9 pr-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
+                    </div>
                 </div>
-                <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-physics-purple to-pink-600 font-bold text-white text-sm hover:brightness-110 transition-all shadow-lg shadow-physics-purple/20">
-                    Create Student Profile
+
+                <button type="submit" id="btn-submit-register" class="w-full py-3 rounded-xl bg-gradient-to-r from-physics-purple to-pink-600 font-bold text-white text-sm hover:brightness-110 transition-all shadow-lg shadow-physics-purple/20 flex items-center justify-center gap-2">
+                    <span>Create Supabase Profile</span> <i class="fa-solid fa-user-plus ml-1"></i>
                 </button>
             </form>
 
-            <div id="auth-status-msg" class="text-xs font-mono text-center hidden p-2.5 rounded-xl border"></div>
-
-            <div class="text-center">
+            <div class="text-center pt-1">
                 <button onclick="guestLogin()" class="text-xs text-gray-400 hover:text-physics-cyan underline">Or continue as Guest Student</button>
             </div>
         </div>
@@ -226,11 +274,18 @@
             <!-- Welcome Hero -->
             <div class="bg-gradient-to-r from-physics-panel via-physics-card to-physics-dark border border-physics-border p-6 lg:p-8 rounded-2xl shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
                 <div class="space-y-2">
-                    <span class="px-3 py-1 rounded-full bg-physics-cyan/10 border border-physics-cyan/30 text-physics-cyan text-xs font-mono uppercase tracking-wider">AP & High School Curriculum</span>
+                    <div class="flex items-center gap-2">
+                        <span class="px-3 py-1 rounded-full bg-physics-cyan/10 border border-physics-cyan/30 text-physics-cyan text-xs font-mono uppercase tracking-wider">AP & High School Curriculum</span>
+                        <span id="badge-auth-provider" class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-mono">Supabase Auth</span>
+                    </div>
                     <h1 class="text-2xl lg:text-3xl font-extrabold text-white">Welcome back, <span id="welcome-name-display" class="text-physics-cyan">Alex</span>! 👋</h1>
                     <p class="text-sm text-gray-400 max-w-xl leading-relaxed">
                         Master high school physics concepts with interactive lab simulations, vector fields, and real-time telemetry. Choose a domain to start experimenting.
                     </p>
+                    <div id="user-contact-meta" class="text-xs font-mono text-gray-400 pt-1 flex flex-wrap gap-4">
+                        <span><i class="fa-solid fa-envelope text-physics-cyan mr-1"></i><span id="dash-email">student@physics.edu</span></span>
+                        <span><i class="fa-solid fa-phone text-physics-purple mr-1"></i><span id="dash-phone">Not specified</span></span>
+                    </div>
                 </div>
                 <div class="flex items-center gap-4 bg-gray-950/80 p-4 rounded-xl border border-gray-800">
                     <div class="text-center px-3">
@@ -709,19 +764,123 @@
         </div>
     </footer>
 
-    <!-- JAVASCRIPT APP ENGINE -->
+    <!-- JAVASCRIPT APP ENGINE & SUPABASE AUTH -->
     <script>
         // ==========================================
-        // 1. APP ROUTING & USER SESSION STATE
+        // 1. SUPABASE CLIENT & AUTH STATE
         // ==========================================
+        // Local storage keys for Supabase config
+        const STORAGE_SB_URL = 'PhysicsRepo_sb_url';
+        const STORAGE_SB_KEY = 'PhysicsRepo_sb_key';
+
+        // Defaults or saved credentials
+        let SUPABASE_URL = localStorage.getItem(STORAGE_SB_URL) || 'https://demo-PhysicsRepo.supabase.co';
+        let SUPABASE_ANON_KEY = localStorage.getItem(STORAGE_SB_KEY) || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dummy_anon_key';
+        let supabaseClient = null;
+
+        function initSupabase() {
+            try {
+                if (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY) {
+                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    checkSession();
+                }
+            } catch (err) {
+                console.warn('Supabase initialization fallback:', err.message);
+            }
+            updateSupabaseStatusBadge();
+        }
+
+        function updateSupabaseStatusBadge() {
+            const dot = document.getElementById('sb-status-dot');
+            const txt = document.getElementById('sb-status-text');
+            const urlInput = document.getElementById('cfg-sb-url');
+            const keyInput = document.getElementById('cfg-sb-key');
+
+            if (urlInput) urlInput.value = SUPABASE_URL;
+            if (keyInput) keyInput.value = SUPABASE_ANON_KEY;
+
+            if (SUPABASE_URL && SUPABASE_ANON_KEY && !SUPABASE_URL.includes('demo-PhysicsRepo')) {
+                dot.className = "w-2 h-2 rounded-full bg-emerald-400";
+                txt.textContent = "Supabase Active";
+            } else {
+                dot.className = "w-2 h-2 rounded-full bg-amber-400";
+                txt.textContent = "Supabase Ready (Configure Keys)";
+            }
+        }
+
+        function toggleConfigModal() {
+            const box = document.getElementById('sb-config-box');
+            box.classList.toggle('hidden');
+        }
+
+        function saveSupabaseConfig() {
+            const url = document.getElementById('cfg-sb-url').value.trim();
+            const key = document.getElementById('cfg-sb-key').value.trim();
+            if (url && key) {
+                localStorage.setItem(STORAGE_SB_URL, url);
+                localStorage.setItem(STORAGE_SB_KEY, key);
+                SUPABASE_URL = url;
+                SUPABASE_ANON_KEY = key;
+                try {
+                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    showAlert('Supabase credentials updated successfully!', 'success');
+                    toggleConfigModal();
+                    updateSupabaseStatusBadge();
+                    checkSession();
+                } catch(e) {
+                    showAlert('Failed to connect: ' + e.message, 'error');
+                }
+            } else {
+                showAlert('Please provide both Supabase URL and Anon Key.', 'error');
+            }
+        }
+
         const userState = {
             isLoggedIn: false,
             name: "Alex Morgan",
-            email: "alex.student@physics.edu",
+            email: "student@physics.edu",
+            phone: "+1 (555) 019-2834",
+            grade: "AP Physics 1 / High School Junior",
             completedLabs: 4
         };
 
+        function showAlert(msg, type = 'error') {
+            const alert = document.getElementById('auth-alert');
+            alert.textContent = msg;
+            alert.classList.remove('hidden');
+            if (type === 'error') {
+                alert.className = "text-xs p-3 rounded-xl border font-mono bg-rose-500/10 border-rose-500/40 text-rose-300";
+            } else {
+                alert.className = "text-xs p-3 rounded-xl border font-mono bg-emerald-500/10 border-emerald-500/40 text-emerald-300";
+            }
+        }
+
+        function clearAlert() {
+            const alert = document.getElementById('auth-alert');
+            alert.classList.add('hidden');
+        }
+
+        async function checkSession() {
+            if (!supabaseClient) return;
+            try {
+                const { data: { session }, error } = await supabaseClient.auth.getSession();
+                if (session && session.user) {
+                    const u = session.user;
+                    userState.isLoggedIn = true;
+                    userState.email = u.email;
+                    userState.name = u.user_metadata?.full_name || u.email.split('@')[0];
+                    userState.phone = u.user_metadata?.phone || u.phone || "Not specified";
+                    userState.grade = u.user_metadata?.grade || "AP Physics Student";
+                    updateUserUI();
+                    document.getElementById('auth-overlay').classList.add('hidden');
+                }
+            } catch (e) {
+                console.log('Session check skipped:', e.message);
+            }
+        }
+
         function switchAuthTab(tab) {
+            clearAlert();
             const loginForm = document.getElementById('form-login');
             const regForm = document.getElementById('form-register');
             const tabLoginBtn = document.getElementById('tab-login-btn');
@@ -740,26 +899,180 @@
             }
         }
 
-        function handleAuth(e, type) {
+        async function handleAuth(e, type) {
             e.preventDefault();
+            clearAlert();
+
             if (type === 'login') {
-                userState.name = "Alex Morgan";
-            } else {
-                userState.name = document.getElementById('reg-name').value || "New Student";
+                const email = document.getElementById('login-email').value.trim();
+                const password = document.getElementById('login-pass').value;
+                const submitBtn = document.getElementById('btn-submit-login');
+                const origText = submitBtn.innerHTML;
+
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Authenticating...';
+
+                let authenticated = false;
+
+                // 1. Try Supabase Auth sign in
+                if (supabaseClient && !SUPABASE_URL.includes('demo-PhysicsRepo')) {
+                    try {
+                        const { data, error } = await supabaseClient.auth.signInWithPassword({
+                            email: email,
+                            password: password
+                        });
+
+                        if (error) {
+                            throw error;
+                        }
+
+                        if (data && data.user) {
+                            userState.email = data.user.email;
+                            userState.name = data.user.user_metadata?.full_name || email.split('@')[0];
+                            userState.phone = data.user.user_metadata?.phone || data.user.phone || "Not specified";
+                            userState.grade = data.user.user_metadata?.grade || "AP Physics 1";
+                            authenticated = true;
+                        }
+                    } catch (err) {
+                        console.warn("Supabase sign in attempt:", err.message);
+                        showAlert(err.message);
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = origText;
+                        return;
+                    }
+                } else {
+                    // Fallback to local stored user / demo re-login
+                    const savedUsers = JSON.parse(localStorage.getItem('PhysicsRepo_mock_users') || '[]');
+                    const matchedUser = savedUsers.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
+
+                    if (matchedUser) {
+                        userState.name = matchedUser.name;
+                        userState.email = matchedUser.email;
+                        userState.phone = matchedUser.phone || "Not specified";
+                        userState.grade = matchedUser.grade || "AP Physics";
+                        authenticated = true;
+                    } else if (password.length >= 4) {
+                        // Demo fallback credentials acceptance
+                        userState.name = email.split('@')[0];
+                        userState.email = email;
+                        authenticated = true;
+                    } else {
+                        showAlert('Invalid credentials. Please register or verify password.');
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = origText;
+                        return;
+                    }
+                }
+
+                if (authenticated) {
+                    userState.isLoggedIn = true;
+                    updateUserUI();
+                    document.getElementById('auth-overlay').classList.add('hidden');
+                }
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = origText;
+
+            } else if (type === 'register') {
+                const name = document.getElementById('reg-name').value.trim();
+                const phone = document.getElementById('reg-phone').value.trim();
+                const grade = document.getElementById('reg-grade').value;
+                const email = document.getElementById('reg-email').value.trim();
+                const password = document.getElementById('reg-pass').value;
+                const submitBtn = document.getElementById('btn-submit-register');
+                const origText = submitBtn.innerHTML;
+
+                if (!phone) {
+                    showAlert('Please enter your mobile phone number.');
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Registering Account...';
+
+                let registered = false;
+
+                // 1. Try Supabase Auth sign up
+                if (supabaseClient && !SUPABASE_URL.includes('demo-PhysicsRepo')) {
+                    try {
+                        const { data, error } = await supabaseClient.auth.signUp({
+                            email: email,
+                            password: password,
+                            options: {
+                                data: {
+                                    full_name: name,
+                                    phone: phone,
+                                    grade: grade
+                                }
+                            }
+                        });
+
+                        if (error) {
+                            throw error;
+                        }
+
+                        if (data && data.user) {
+                            userState.email = data.user.email;
+                            userState.name = name;
+                            userState.phone = phone;
+                            userState.grade = grade;
+                            registered = true;
+                            
+                            // Check if confirmation email is required
+                            if (data.session == null) {
+                                showAlert('Account created! Please check your email to confirm registration or sign in.', 'success');
+                                setTimeout(() => switchAuthTab('login'), 2000);
+                                submitBtn.disabled = false;
+                                submitBtn.innerHTML = origText;
+                                return;
+                            }
+                        }
+                    } catch (err) {
+                        console.warn("Supabase sign up attempt:", err.message);
+                        showAlert(err.message);
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = origText;
+                        return;
+                    }
+                } else {
+                    // Local profile persistence for offline / preview re-login
+                    const savedUsers = JSON.parse(localStorage.getItem('PhysicsRepo_mock_users') || '[]');
+                    savedUsers.push({ name, email, phone, grade, password });
+                    localStorage.setItem('PhysicsRepo_mock_users', JSON.stringify(savedUsers));
+
+                    userState.name = name;
+                    userState.email = email;
+                    userState.phone = phone;
+                    userState.grade = grade;
+                    registered = true;
+                }
+
+                if (registered) {
+                    userState.isLoggedIn = true;
+                    updateUserUI();
+                    document.getElementById('auth-overlay').classList.add('hidden');
+                }
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = origText;
             }
-            userState.isLoggedIn = true;
-            updateUserUI();
-            document.getElementById('auth-overlay').classList.add('hidden');
         }
 
         function guestLogin() {
             userState.name = "Guest Student";
+            userState.email = "guest@PhysicsRepo.edu";
+            userState.phone = "N/A (Guest Session)";
             userState.isLoggedIn = true;
             updateUserUI();
             document.getElementById('auth-overlay').classList.add('hidden');
         }
 
-        function logout() {
+        async function logout() {
+            if (supabaseClient) {
+                try {
+                    await supabaseClient.auth.signOut();
+                } catch(e) {
+                    console.log('Supabase signout:', e.message);
+                }
+            }
             userState.isLoggedIn = false;
             document.getElementById('auth-overlay').classList.remove('hidden');
         }
@@ -769,6 +1082,11 @@
             document.getElementById('welcome-name-display').textContent = userState.name.split(' ')[0];
             const initials = userState.name.split(' ').map(n => n[0]).join('').toUpperCase();
             document.getElementById('user-avatar-initials').textContent = initials || 'ST';
+
+            const emailEl = document.getElementById('dash-email');
+            const phoneEl = document.getElementById('dash-phone');
+            if (emailEl) emailEl.textContent = userState.email || "student@physics.edu";
+            if (phoneEl) phoneEl.textContent = userState.phone || "Not specified";
         }
 
         // View Routing Function
@@ -820,6 +1138,8 @@
         const modernState = { metalPhi: 2.28, lambda: 400, intensity: 70, photons: [], electrons: [] };
 
         window.onload = function() {
+            initSupabase();
+
             projCanvas = document.getElementById('projectileCanvas'); projCtx = projCanvas.getContext('2d');
             pendCanvas = document.getElementById('pendulumCanvas'); pendCtx = pendCanvas.getContext('2d');
             fluidCanvas = document.getElementById('fluidCanvas'); fluidCtx = fluidCanvas.getContext('2d');
@@ -1316,10 +1636,6 @@
 
             requestAnimationFrame(mainAnimationLoop);
         }
-
- <!-- OFFICIAL SUPABASE DATABASE CLIENT LIBRARY ASSET PATH -->
-    <script src="https://jsdelivr.net"></script>
-    <script src="auth.js"></script>
     </script>
 </body>
 </html>
