@@ -1,12 +1,16 @@
 /**
- * supabase_auth.js - Standalone Supabase Auth & Profile Sync
+ * supabase_auth.js - Dedicated Supabase Auth & Profile Handler
  */
-(function loadSupabase() {
+
+// 1. Dynamic CDN Injection so HTML doesn't depend on external network at load time
+(function loadSupabaseScript() {
     if (!window.supabase) {
         const script = document.createElement('script');
         script.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
         script.async = true;
-        script.onload = () => initSupabaseAuth();
+        script.onload = () => {
+            initSupabaseAuth();
+        };
         document.head.appendChild(script);
     } else {
         initSupabaseAuth();
@@ -22,29 +26,41 @@ function initSupabaseAuth() {
     try {
         if (window.supabase) {
             supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            attachAuthHandlers();
-            checkExistingSession();
+            bindAuthEvents();
+            checkSession();
         }
-    } catch (err) {
-        console.error("Supabase client init failed:", err);
+    } catch (e) {
+        console.error("Supabase init error:", e);
     }
 }
 
-function setStatusMessage(msg, isError = false) {
-    const box = document.getElementById('authStatus');
-    if (!box) return;
-    box.innerText = msg;
-    box.className = `text-xs p-3 rounded-xl border font-mono block ${
+function displayStatus(msg, isError = false) {
+    const authStatus = document.getElementById('authStatus');
+    if (!authStatus) return;
+    authStatus.innerText = msg;
+    authStatus.className = `text-xs p-3 rounded-xl border font-mono block ${
         isError ? 'bg-rose-500/10 border-rose-500/40 text-rose-300' : 'bg-emerald-500/10 border-emerald-500/40 text-emerald-300'
     }`;
 }
 
-async function loadStudentData(user) {
-    if (!supabaseClient || !user) return;
+async function checkSession() {
+    if (!supabaseClient) return;
+    try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (session && session.user) {
+            hydrateProfile(session.user);
+            document.getElementById('auth-overlay')?.classList.add('hidden');
+        }
+    } catch (e) {
+        console.log("No active session:", e.message);
+    }
+}
+
+async function hydrateProfile(user) {
     try {
         const { data } = await supabaseClient
             .from('profiles')
-            .select('full_name, mobile_number, grade_level')
+            .select('*')
             .eq('id', user.id)
             .single();
 
@@ -52,122 +68,117 @@ async function loadStudentData(user) {
         const phone = (data && data.mobile_number) || user.user_metadata?.mobile || "Not specified";
         const grade = (data && data.grade_level) || user.user_metadata?.grade || "AP Physics 1";
 
-        const welcomeEl = document.getElementById('welcome-name-display');
-        const userDisplayEl = document.getElementById('user-display-name');
-        const emailEl = document.getElementById('dash-email');
-        const phoneEl = document.getElementById('dash-phone');
-        const gradeEl = document.getElementById('dash-grade');
-        const initialsEl = document.getElementById('user-avatar-initials');
+        const nameDisp = document.getElementById('welcome-name-display');
+        const userDisp = document.getElementById('user-display-name');
+        const emailDisp = document.getElementById('dash-email');
+        const phoneDisp = document.getElementById('dash-phone');
+        const gradeDisp = document.getElementById('dash-grade');
 
-        if (welcomeEl) welcomeEl.textContent = name.split(' ')[0];
-        if (userDisplayEl) userDisplayEl.textContent = name;
-        if (emailEl) emailEl.textContent = user.email;
-        if (phoneEl) phoneEl.textContent = phone;
-        if (gradeEl) gradeEl.textContent = grade;
-        if (initialsEl) {
-            const initials = name.split(' ').filter(n => n.length > 0).map(n => n[0]).join('').toUpperCase();
-            initialsEl.textContent = initials.slice(0, 2) || 'ST';
-        }
+        if (nameDisp) nameDisp.textContent = name.split(' ')[0];
+        if (userDisp) userDisp.textContent = name;
+        if (emailDisp) emailDisp.textContent = user.email;
+        if (phoneDisp) phoneDisp.textContent = phone;
+        if (gradeDisp) gradeDisp.textContent = grade;
     } catch (err) {
-        console.warn("Profile fetch skipped:", err.message);
+        console.warn("Hydrate error:", err);
     }
 }
 
-async function checkExistingSession() {
-    if (!supabaseClient) return;
-    try {
-        const { data: { session } } = await supabaseClient.auth.getSession();
-        if (session && session.user) {
-            await loadStudentData(session.user);
-            document.getElementById('auth-overlay')?.classList.add('hidden');
-        }
-    } catch (e) {
-        console.log("No previous session:", e.message);
-    }
-}
-
-function attachAuthHandlers() {
-    // 1. REGISTER
-    const registerForm = document.getElementById('registerForm');
-    if (registerForm) {
-        registerForm.addEventListener('submit', async (e) => {
+function bindAuthEvents() {
+    // 1. REGISTRATION FORM
+    const regForm = document.getElementById('registerForm');
+    if (regForm) {
+        regForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            const email = document.getElementById('regEmail')?.value.trim();
+            const password = document.getElementById('regPassword')?.value;
             const fullName = document.getElementById('regFullName')?.value.trim();
             const mobile = document.getElementById('regMobile')?.value.trim();
             const grade = document.getElementById('regGrade')?.value;
-            const email = document.getElementById('regEmail')?.value.trim();
-            const password = document.getElementById('regPassword')?.value;
-            const submitBtn = document.getElementById('btnRegister');
+            const btn = document.getElementById('btnRegister');
 
             if (!supabaseClient) {
-                setStatusMessage("Authentication service is connecting. Please retry.", true);
+                displayStatus("Supabase client is not ready. Please refresh.", true);
                 return;
             }
 
-            setStatusMessage("Creating profile...");
-            submitBtn.disabled = true;
+            displayStatus("Creating account, please wait...");
+            btn.disabled = true;
 
-            try {
-                const { data: authData, error: authError } = await supabaseClient.auth.signUp({
-                    email,
-                    password,
-                    options: { data: { full_name: fullName, mobile, grade } }
-                });
-
-                if (authError) {
-                    setStatusMessage(`Signup failed: ${authError.message}`, true);
-                    submitBtn.disabled = false;
-                    return;
+            const { data: authData, error: authError } = await supabaseClient.auth.signUp({
+                email,
+                password,
+                options: {
+                    data: { full_name: fullName, mobile, grade }
                 }
+            });
 
-                if (authData.user) {
-                    registerForm.reset();
-                    if (authData.session) {
-                        await loadStudentData(authData.user);
-                        setTimeout(() => document.getElementById('auth-overlay')?.classList.add('hidden'), 800);
-                    } else {
-                        setStatusMessage("Registration successful! Check your email to verify your account or sign in.");
-                    }
-                }
-            } catch (err) {
-                setStatusMessage(`System error: ${err.message}`, true);
-            } finally {
-                submitBtn.disabled = false;
+            if (authError) {
+                displayStatus(`Registration Error: ${authError.message}`, true);
+                btn.disabled = false;
+                return;
             }
+
+            if (authData.user) {
+                const { error: dbError } = await supabaseClient
+                    .from('profiles')
+                    .insert([{
+                        id: authData.user.id,
+                        full_name: fullName,
+                        mobile_number: mobile,
+                        grade_level: grade
+                    }]);
+
+                if (dbError) {
+                    displayStatus(`Account created, but database record failed: ${dbError.message}`, true);
+                } else {
+                    displayStatus("Profile created successfully! Please check your email or log in.");
+                    regForm.reset();
+                }
+
+                if (authData.session) {
+                    hydrateProfile(authData.user);
+                    setTimeout(() => {
+                        document.getElementById('auth-overlay')?.classList.add('hidden');
+                    }, 1000);
+                }
+            }
+            btn.disabled = false;
         });
     }
 
-    // 2. LOGIN
+    // 2. LOGIN FORM
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('loginEmail')?.value.trim();
             const password = document.getElementById('loginPassword')?.value;
-            const submitBtn = document.getElementById('btnLogin');
+            const btn = document.getElementById('btnLogin');
 
             if (!supabaseClient) {
-                setStatusMessage("Authentication service is connecting. Please retry.", true);
+                displayStatus("Supabase client is not ready. Please refresh.", true);
                 return;
             }
 
-            setStatusMessage("Verifying credentials...");
-            submitBtn.disabled = true;
+            displayStatus("Verifying credentials...");
+            btn.disabled = true;
 
-            try {
-                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-                if (error) {
-                    setStatusMessage(`Login failed: ${error.message}`, true);
-                } else if (data && data.user) {
-                    setStatusMessage("Authorized. Entering portal...");
-                    await loadStudentData(data.user);
-                    setTimeout(() => document.getElementById('auth-overlay')?.classList.add('hidden'), 600);
-                }
-            } catch (err) {
-                setStatusMessage(`System error: ${err.message}`, true);
-            } finally {
-                submitBtn.disabled = false;
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
+                email,
+                password
+            });
+
+            if (error) {
+                displayStatus(`Login Failed: ${error.message}`, true);
+            } else if (data && data.user) {
+                displayStatus("Login successful! Loading student portal...");
+                await hydrateProfile(data.user);
+                setTimeout(() => {
+                    document.getElementById('auth-overlay')?.classList.add('hidden');
+                }, 800);
             }
+            btn.disabled = false;
         });
     }
 }
