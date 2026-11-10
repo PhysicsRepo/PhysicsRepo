@@ -34,13 +34,13 @@
         }
     </script>
 
-    <!-- Google Fonts & FontAwesome Icons -->
+    <!-- Fonts & FontAwesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- MathJax for TeX equations -->
+    <!-- MathJax -->
     <script>
         window.MathJax = {
             tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']] },
@@ -64,7 +64,6 @@
         ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 3px; }
     </style>
 
-    <!-- Modal Tab Switcher -->
     <script>
         function switchAuthTab(tab) {
             var loginCard = document.getElementById('loginCard');
@@ -138,7 +137,7 @@
 
             <!-- Registration Card / Form -->
             <div id="registerCard" class="space-y-3" style="display: none;">
-                <form id="registerForm" class="space-y-3" onsubmit="return false;">
+                <form id="registerForm" class="space-y-3">
                     <div>
                         <label class="block text-xs font-mono text-gray-400 mb-1">Full Name</label>
                         <div class="relative">
@@ -181,7 +180,7 @@
                     </div>
 
                     <button type="submit" id="btnRegister" class="w-full py-3 rounded-xl bg-gradient-to-r from-physics-purple to-pink-600 font-bold text-white text-sm hover:brightness-110 transition-all shadow-lg shadow-physics-purple/20 flex items-center justify-center gap-2">
-                           <span>Create Supabase Profile</span> <i class="fa-solid fa-user-plus ml-1"></i>
+                        <span>Create Supabase Profile</span> <i class="fa-solid fa-user-plus ml-1"></i>
                     </button>
                 </form>
             </div>
@@ -207,7 +206,6 @@
                 </div>
             </div>
 
-            <!-- Course Modules Navigation -->
             <nav class="hidden lg:flex items-center space-x-1">
                 <button id="nav-dashboard" onclick="navigateTo('dashboard')" class="px-3 py-2 rounded-lg text-xs font-medium transition-all text-physics-cyan bg-physics-cyan/10 border border-physics-cyan/30 flex items-center gap-1.5"><i class="fa-solid fa-house"></i> Dashboard</button>
                 <button id="nav-mechanics" onclick="navigateTo('mechanics')" class="px-3 py-2 rounded-lg text-xs font-medium transition-all text-gray-400 hover:text-white hover:bg-gray-800/60 flex items-center gap-1.5"><i class="fa-solid fa-plane-launch"></i> Mechanics</button>
@@ -217,7 +215,6 @@
                 <button id="nav-modern" onclick="navigateTo('modern')" class="px-3 py-2 rounded-lg text-xs font-medium transition-all text-gray-400 hover:text-white hover:bg-gray-800/60 flex items-center gap-1.5"><i class="fa-solid fa-sun"></i> Modern Physics</button>
             </nav>
 
-            <!-- User Session Avatar -->
             <div class="flex items-center space-x-3">
                 <div class="flex items-center gap-2 bg-physics-card border border-physics-border px-3 py-1.5 rounded-xl">
                     <div class="w-7 h-7 rounded-full bg-gradient-to-r from-physics-cyan to-physics-purple text-slate-950 font-bold text-xs flex items-center justify-center" id="user-avatar-initials">AM</div>
@@ -295,7 +292,10 @@
                         <canvas id="projectileCanvas" class="w-full h-full block"></canvas>
                     </div>
                     <div class="flex justify-between items-center text-xs font-mono">
-                        <button onclick="toggleProjectile()" id="btn-play-proj" class="px-4 py-2 rounded-xl bg-physics-cyan text-slate-950 font-bold">Launch Projectile</button>
+                        <div class="flex gap-2">
+                            <button onclick="toggleProjectile()" id="btn-play-proj" class="px-4 py-2 rounded-xl bg-physics-cyan text-slate-950 font-bold">Launch Projectile</button>
+                            <button onclick="resetProjectile()" class="px-3 py-2 rounded-xl bg-gray-800 text-gray-300">Reset</button>
+                        </div>
                         <span class="text-gray-400">Position: <strong id="proj-pos" class="text-white">0.0, 0.0</strong> m</span>
                     </div>
                 </div>
@@ -439,7 +439,6 @@
 
     <!-- 4. PHYSICS SIMULATION ENGINE & VIEW ROUTING -->
     <script>
-        // Tab Navigation
         function navigateTo(pageId) {
             const pages = ['dashboard', 'mechanics', 'fluids', 'optics', 'electrostatics', 'modern'];
             pages.forEach(p => {
@@ -452,8 +451,6 @@
                         : "px-3 py-2 rounded-lg text-xs font-medium text-gray-400 hover:text-white hover:bg-gray-800/60 flex items-center gap-1.5";
                 }
             });
-
-            // Re-render the active canvas dynamically with guaranteed dimensions
             setTimeout(resizeAndRedrawActiveCanvas, 60);
         }
 
@@ -462,10 +459,12 @@
         }
 
         function logout() {
+            if (window.handleSupabaseLogout) {
+                window.handleSupabaseLogout();
+            }
             document.getElementById('auth-overlay').classList.remove('hidden');
         }
 
-        // --- Canvas References & State ---
         let projCanvas, projCtx, fluidCanvas, fluidCtx, opticsCanvas, opticsCtx, electroCanvas, electroCtx, modernCanvas, modernCtx;
         
         const projState = { angle: 45, v0: 40, g: 9.81, t: 0, isPlaying: false, trail: [] };
@@ -493,7 +492,6 @@
             requestAnimationFrame(mainAnimationLoop);
         };
 
-        // Resize with guaranteed nonzero fallback dimensions
         function safeResize(canvas) {
             if (!canvas || !canvas.parentElement) return;
             const w = canvas.parentElement.clientWidth || 800;
@@ -518,15 +516,26 @@
             projState.v0 = parseFloat(document.getElementById('slider-proj-v0').value);
             document.getElementById('lbl-proj-angle').textContent = projState.angle + '°';
             document.getElementById('lbl-proj-v0').textContent = projState.v0 + ' m/s';
+            
+            // Instantly start fresh upon changing parameters
+            resetProjectile();
+        }
+
+        function resetProjectile() {
+            projState.isPlaying = false;
+            projState.t = 0;
+            projState.trail = [];
+            const btn = document.getElementById('btn-play-proj');
+            if (btn) btn.textContent = "Launch Projectile";
             drawProjectile();
         }
 
         function toggleProjectile() {
             projState.isPlaying = !projState.isPlaying;
-            document.getElementById('btn-play-proj').textContent = projState.isPlaying ? "Pause" : "Launch Projectile";
-            if (projState.isPlaying && projState.t > 6) {
+            const btn = document.getElementById('btn-play-proj');
+            if (btn) btn.textContent = projState.isPlaying ? "Pause" : "Launch Projectile";
+            if (projState.isPlaying && projState.t > 0 && !projState.trail.length) {
                 projState.t = 0;
-                projState.trail = [];
             }
         }
 
@@ -548,7 +557,8 @@
 
             if (y < 0 && projState.isPlaying) {
                 projState.isPlaying = false;
-                document.getElementById('btn-play-proj').textContent = "Re-launch Projectile";
+                const btn = document.getElementById('btn-play-proj');
+                if (btn) btn.textContent = "Re-launch Projectile";
             }
 
             const scale = 5;
@@ -557,7 +567,6 @@
 
             if (projState.isPlaying) projState.trail.push({ x: px, y: py });
 
-            // Trail
             if (projState.trail.length > 1) {
                 projCtx.strokeStyle = 'rgba(6, 182, 212, 0.5)'; projCtx.setLineDash([4, 4]);
                 projCtx.beginPath(); projCtx.moveTo(projState.trail[0].x, projState.trail[0].y);
@@ -565,7 +574,6 @@
                 projCtx.stroke(); projCtx.setLineDash([]);
             }
 
-            // Ball
             projCtx.fillStyle = '#38BDF8';
             projCtx.beginPath(); projCtx.arc(px, py, 7, 0, Math.PI * 2); projCtx.fill();
 
@@ -624,11 +632,9 @@
             opticsCtx.strokeStyle = '#475569'; opticsCtx.setLineDash([4, 4]);
             opticsCtx.beginPath(); opticsCtx.moveTo(0, midY); opticsCtx.lineTo(w, midY); opticsCtx.stroke(); opticsCtx.setLineDash([]);
 
-            // Lens
             opticsCtx.strokeStyle = '#F59E0B'; opticsCtx.lineWidth = 3;
             opticsCtx.beginPath(); opticsCtx.moveTo(lx, midY - 90); opticsCtx.lineTo(lx, midY + 90); opticsCtx.stroke();
 
-            // Object Arrow
             const ox = lx - opticsState.do * scale;
             opticsCtx.strokeStyle = '#06B6D4'; opticsCtx.lineWidth = 2;
             opticsCtx.beginPath(); opticsCtx.moveTo(ox, midY); opticsCtx.lineTo(ox, midY - 40); opticsCtx.stroke();
@@ -668,16 +674,13 @@
             const w = modernCanvas.width || 800, h = modernCanvas.height || 320;
             modernCtx.clearRect(0, 0, w, h);
 
-            // Target Plate
             modernCtx.fillStyle = '#475569';
             modernCtx.fillRect(100, 60, 20, h - 120);
 
-            // Light beam
             modernCtx.strokeStyle = modernState.lambda < 400 ? '#A855F7' : '#06B6D4';
             modernCtx.lineWidth = 4;
             modernCtx.beginPath(); modernCtx.moveTo(20, 40); modernCtx.lineTo(100, h / 2); modernCtx.stroke();
 
-            // Ejected electrons
             const kMax = (1240 / modernState.lambda) - modernState.metalPhi;
             if (kMax > 0) {
                 for (let i = 0; i < 4; i++) {
@@ -688,7 +691,6 @@
             }
         }
 
-        // Main Animation Loop
         let lastTime = 0;
         function mainAnimationLoop(timestamp) {
             const dt = (timestamp - lastTime) / 1000;
@@ -699,12 +701,12 @@
                 drawProjectile();
             }
 
-            drawModern(); // Continuous electron stream
+            drawModern();
             requestAnimationFrame(mainAnimationLoop);
         }
     </script>
 
-    <!-- Supabase Auth linked from external JS file -->
+    <!-- External Supabase Script -->
     <script src="auth.js"></script>
 </body>
 </html>
