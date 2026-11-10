@@ -130,13 +130,23 @@ function bindAuthEvents() {
                 }
 
                 if (authData?.user) {
-                    // Try to insert directly into profiles; if blocked by trigger/RLS, ignore error
-                    await supabaseClient.from('profiles').upsert([{
-                        id: authData.user.id,
-                        full_name: fullName,
-                        mobile_number: mobile,
-                        grade_level: grade
-                    }]).catch(() => {});
+                   // Safely handle profile upsert without .catch()
+try {
+    const { error: dbError } = await supabaseClient
+        .from('profiles')
+        .upsert([{
+            id: authData.user.id,
+            full_name: fullName,
+            mobile_number: mobile,
+            grade_level: grade
+        }]);
+
+    if (dbError) {
+        console.warn("Database notice (trigger may have already handled this):", dbError.message);
+    }
+} catch (dbErr) {
+    console.warn("Upsert skipped:", dbErr);
+}
 
                     regForm.reset();
 
