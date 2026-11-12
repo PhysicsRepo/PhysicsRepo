@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classical Mechanics - QuantumLab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        physics: {
+                            dark: '#070A13',
+                            panel: '#0F172A',
+                            card: '#131C31',
+                            border: '#1E293B',
+                            cyan: '#06B6D4',
+                            purple: '#A855F7',
+                            emerald: '#10B981',
+                            pink: '#EC4899',
+                            amber: '#F59E0B'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body class="bg-[#070A13] text-gray-100 min-h-screen flex flex-col font-sans">
+
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-40 bg-physics-dark/95 backdrop-blur-md border-b border-physics-border px-4 lg:px-8 py-3">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <a href="index.html" class="flex items-center space-x-3 cursor-pointer">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-physics-cyan to-physics-purple p-0.5 flex items-center justify-center shadow-lg shadow-physics-cyan/20">
+                    <div class="w-full h-full bg-physics-dark rounded-[10px] flex items-center justify-center">
+                        <i class="fa-solid fa-atom text-physics-cyan text-lg"></i>
+                    </div>
+                </div>
+                <span class="text-lg font-extrabold tracking-wider bg-gradient-to-r from-physics-cyan via-white to-physics-purple bg-clip-text text-transparent">QUANTUM<span class="text-physics-cyan">LAB</span></span>
+            </a>
+            <nav class="hidden lg:flex items-center space-x-1">
+                <a href="index.html" class="px-3 py-2 rounded-lg text-xs font-medium text-gray-400 hover:text-white hover:bg-gray-800/60 transition-all"><i class="fa-solid fa-house"></i> Dashboard</a>
+                <a href="mechanics.html" class="px-3 py-2 rounded-lg text-xs font-medium text-physics-cyan bg-physics-cyan/10 border border-physics-cyan/30 flex items-center gap-1.5"><i class="fa-solid fa-plane-launch"></i> Mechanics</a>
+                <a href="fluids.html" class="px-3 py-2 rounded-lg text-xs font-medium text-gray-400 hover:text-white hover:bg-gray-800/60 transition-all"><i class="fa-solid fa-droplet"></i> Fluids</a>
+                <a href="optics.html" class="px-3 py-2 rounded-lg text-xs font-medium text-gray-400 hover:text-white hover:bg-gray-800/60 transition-all"><i class="fa-solid fa-glasses"></i> Optics</a>
+                <a href="electrostatics.html" class="px-3 py-2 rounded-lg text-xs font-medium text-gray-400 hover:text-white hover:bg-gray-800/60 transition-all"><i class="fa-solid fa-bolt"></i> Electrostatics</a>
+                <a href="modern.html" class="px-3 py-2 rounded-lg text-xs font-medium text-gray-400 hover:text-white hover:bg-gray-800/60 transition-all"><i class="fa-solid fa-sun"></i> Modern</a>
+            </nav>
+            <a href="index.html" class="text-xs font-mono text-gray-400 hover:text-physics-cyan flex items-center gap-1"><i class="fa-solid fa-arrow-left"></i> Back to Hub</a>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 lg:px-8 py-8 w-full flex-grow space-y-8">
+        
+        <!-- Domain Header & Simulation CTA -->
+        <div class="bg-gradient-to-r from-physics-panel via-physics-card to-physics-dark border border-physics-border p-6 lg:p-8 rounded-2xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div class="space-y-2 max-w-2xl">
+                <span class="px-3 py-1 rounded-full bg-physics-cyan/10 border border-physics-cyan/30 text-physics-cyan text-xs font-mono uppercase tracking-wider">Module 01 • Kinematics</span>
+                <h1 class="text-2xl lg:text-3xl font-extrabold text-white">Classical Mechanics</h1>
+                <p class="text-sm text-gray-400 leading-relaxed">
+                    Study 2D projectile kinematics, parabolic path trajectories, gravitational acceleration, and velocity vectors.
+                </p>
+            </div>
+            <button onclick="openSimulationModal()" class="px-5 py-3 rounded-xl bg-gradient-to-r from-physics-cyan to-blue-600 font-bold text-slate-950 text-sm hover:brightness-110 shadow-lg shadow-physics-cyan/20 flex items-center gap-2 whitespace-nowrap transition-all">
+                <i class="fa-solid fa-play"></i> Open Interactive Simulation
+            </button>
+        </div>
+
+        <!-- YouTube Video Lectures Section -->
+        <section class="space-y-4">
+            <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-brands fa-youtube text-red-500"></i> Curated Lecture Library
+                </h2>
+                <span class="text-xs text-gray-400 font-mono">Select a video to study</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Video Card 1 -->
+                <div class="bg-physics-card border border-physics-border hover:border-physics-cyan/50 rounded-2xl overflow-hidden group transition-all">
+                    <a href="https://www.youtube.com/watch?v=0jGZ644xvd4" target="_blank" rel="noopener noreferrer" class="block relative aspect-video bg-black overflow-hidden">
+                        <img src="https://img.youtube.com/vi/0jGZ644xvd4/hqdefault.jpg" alt="Video thumbnail" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-300">
+                        <span class="absolute bottom-2 right-2 bg-black/80 text-white font-mono text-[10px] px-1.5 py-0.5 rounded">14:20</span>
+                        <div class="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-circle-play text-3xl text-physics-cyan"></i>
+                        </div>
+                    </a>
+                    <div class="p-4 space-y-1">
+                        <h3 class="text-sm font-semibold text-white line-clamp-1">2D Projectile Motion Explained</h3>
+                        <p class="text-xs text-gray-400">AP Physics 1 / Kinematic vector decomposition.</p>
+                    </div>
+                </div>
+
+                <!-- Video Card Placeholder 2 -->
+                <div class="bg-physics-card border border-physics-border border-dashed rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-2 text-gray-500 min-h-[220px]">
+                    <i class="fa-brands fa-youtube text-3xl text-gray-600"></i>
+                    <span class="text-xs font-mono font-medium text-gray-400">Next Lecture Slot</span>
+                    <p class="text-[11px] text-gray-500">Insert your YouTube video ID and title in mechanics.html</p>
+                </div>
+
+                <!-- Video Card Placeholder 3 -->
+                <div class="bg-physics-card border border-physics-border border-dashed rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-2 text-gray-500 min-h-[220px]">
+                    <i class="fa-brands fa-youtube text-3xl text-gray-600"></i>
+                    <span class="text-xs font-mono font-medium text-gray-400">Next Lecture Slot</span>
+                    <p class="text-[11px] text-gray-500">Insert your YouTube video ID and title in mechanics.html</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Simulation Modal -->
+    <div id="simModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-3 lg:p-6">
+        <div class="bg-physics-card border border-physics-border rounded-2xl w-full max-w-5xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between px-6 py-4 border-b border-physics-border bg-physics-panel/60">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-physics-cyan animate-pulse"></span>
+                    <h3 class="font-bold text-white text-base">2D Projectile Motion Sandbox</h3>
+                </div>
+                <button onclick="closeSimulationModal()" class="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-gray-800 transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 overflow-y-auto">
+                <div class="lg:col-span-8 space-y-3">
+                    <div class="w-full h-80 bg-slate-950 rounded-xl overflow-hidden border border-physics-border relative">
+                        <canvas id="projectileCanvas" class="w-full h-full block"></canvas>
+                    </div>
+                    <div class="flex justify-between items-center text-xs font-mono">
+                        <div class="flex gap-2">
+                            <button onclick="toggleProjectile()" id="btn-play-proj" class="px-4 py-2 rounded-xl bg-physics-cyan text-slate-950 font-bold hover:brightness-110">Launch Projectile</button>
+                            <button onclick="resetProjectile()" class="px-3 py-2 rounded-xl bg-gray-800 text-gray-300 hover:bg-gray-700">Reset</button>
+                        </div>
+                        <span class="text-gray-400">Position $(x, y)$: <strong id="proj-pos" class="text-white">0.0, 0.0</strong> m</span>
+                    </div>
+                </div>
+
+                <!-- Parameters Control Column -->
+                <div class="lg:col-span-4 bg-physics-panel/40 border border-physics-border p-5 rounded-2xl space-y-4 text-xs font-mono">
+                    <h4 class="text-sm font-bold text-white pb-2 border-b border-gray-800">Launch Parameters</h4>
+                    <div>
+                        <div class="flex justify-between text-gray-300 mb-1"><span>Launch Angle</span><span id="lbl-proj-angle" class="text-physics-cyan">45°</span></div>
+                        <input type="range" id="slider-proj-angle" min="10" max="80" value="45" oninput="updateProjectileParams()" class="w-full accent-physics-cyan">
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-gray-300 mb-1"><span>Initial Velocity ($v_0$)</span><span id="lbl-proj-v0" class="text-emerald-400">40 m/s</span></div>
+                        <input type="range" id="slider-proj-v0" min="10" max="80" value="40" oninput="updateProjectileParams()" class="w-full accent-emerald-400">
+                    </div>
+                    <div class="pt-2 text-gray-400 text-[11px] leading-relaxed">
+                        Trajectory equation: <br>
+                        $y(x) = x \tan\theta - \frac{g x^2}{2 v_0^2 \cos^2\theta}$
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal Handling
+        function openSimulationModal() {
+            document.getElementById('simModal').classList.remove('hidden');
+            setTimeout(() => {
+                safeResize(projCanvas);
+                drawProjectile();
+            }, 50);
+        }
+        function closeSimulationModal() {
+            document.getElementById('simModal').classList.add('hidden');
+            projState.isPlaying = false;
+            document.getElementById('btn-play-proj').textContent = "Launch Projectile";
+        }
+
+        // Projectile Canvas Engine
+        let projCanvas, projCtx;
+        const projState = { angle: 45, v0: 40, g: 9.81, t: 0, isPlaying: false, trail: [] };
+
+        window.onload = function() {
+            projCanvas = document.getElementById('projectileCanvas');
+            projCtx = projCanvas?.getContext('2d');
+            updateProjectileParams();
+            requestAnimationFrame(simLoop);
+        };
+
+        function safeResize(canvas) {
+            if (!canvas || !canvas.parentElement) return;
+            canvas.width = canvas.parentElement.clientWidth || 700;
+            canvas.height = canvas.parentElement.clientHeight || 320;
+        }
+
+        function updateProjectileParams() {
+            projState.angle = parseFloat(document.getElementById('slider-proj-angle').value);
+            projState.v0 = parseFloat(document.getElementById('slider-proj-v0').value);
+            document.getElementById('lbl-proj-angle').textContent = projState.angle + '°';
+            document.getElementById('lbl-proj-v0').textContent = projState.v0 + ' m/s';
+            resetProjectile();
+        }
+
+        function resetProjectile() {
+            projState.isPlaying = false;
+            projState.t = 0;
+            projState.trail = [];
+            const btn = document.getElementById('btn-play-proj');
+            if (btn) btn.textContent = "Launch Projectile";
+            drawProjectile();
+        }
+
+        function toggleProjectile() {
+            projState.isPlaying = !projState.isPlaying;
+            const btn = document.getElementById('btn-play-proj');
+            if (btn) btn.textContent = projState.isPlaying ? "Pause" : "Launch Projectile";
+        }
+
+        function drawProjectile() {
+            if (!projCtx) return;
+            const w = projCanvas.width, h = projCanvas.height;
+            projCtx.clearRect(0, 0, w, h);
+
+            const groundY = h - 30;
+            projCtx.strokeStyle = '#06B6D4'; projCtx.lineWidth = 2;
+            projCtx.beginPath(); projCtx.moveTo(0, groundY); projCtx.lineTo(w, groundY); projCtx.stroke();
+
+            const rad = projState.angle * Math.PI / 180;
+            const vx0 = projState.v0 * Math.cos(rad);
+            const vy0 = projState.v0 * Math.sin(rad);
+
+            const x = vx0 * projState.t;
+            const y = vy0 * projState.t - 0.5 * projState.g * projState.t * projState.t;
+
+            if (y < 0 && projState.isPlaying) {
+                projState.isPlaying = false;
+                const btn = document.getElementById('btn-play-proj');
+                if (btn) btn.textContent = "Re-launch Projectile";
+            }
+
+            const scale = 5;
+            const px = 50 + x * scale;
+            const py = groundY - Math.max(0, y) * scale;
+
+            if (projState.isPlaying) projState.trail.push({ x: px, y: py });
+
+            if (projState.trail.length > 1) {
+                projCtx.strokeStyle = 'rgba(6, 182, 212, 0.5)'; projCtx.setLineDash([4, 4]);
+                projCtx.beginPath(); projCtx.moveTo(projState.trail[0].x, projState.trail[0].y);
+                for (let i = 1; i < projState.trail.length; i++) projCtx.lineTo(projState.trail[i].x, projState.trail[i].y);
+                projCtx.stroke(); projCtx.setLineDash([]);
+            }
+
+            projCtx.fillStyle = '#38BDF8';
+            projCtx.beginPath(); projCtx.arc(px, py, 7, 0, Math.PI * 2); projCtx.fill();
+
+            const posEl = document.getElementById('proj-pos');
+            if (posEl) posEl.textContent = `${x.toFixed(1)}, ${Math.max(0, y).toFixed(1)}`;
+        }
+
+        let lastT = 0;
+        function simLoop(ts) {
+            const dt = (ts - lastT) / 1000;
+            lastT = ts;
+            if (projState.isPlaying) {
+                projState.t += dt;
+                drawProjectile();
+            }
+            requestAnimationFrame(simLoop);
+        }
+    </script>
+</body>
+</html>
