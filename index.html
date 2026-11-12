@@ -51,14 +51,6 @@
 
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #070A13; color: #F3F4F6; }
-        input[type=range] { -webkit-appearance: none; background: #1E293B; height: 6px; border-radius: 4px; }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%;
-            background: #06B6D4; cursor: pointer; box-shadow: 0 0 10px rgba(6, 182, 212, 0.7);
-            transition: transform 0.1s ease;
-        }
-        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.25); }
-        canvas { touch-action: none; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #070A13; }
         ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 3px; }
@@ -157,9 +149,9 @@
                     <div>
                         <label class="block text-xs font-mono text-gray-400 mb-1">Grade / Level</label>
                         <select id="regGrade" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-physics-purple">
-                            <option value="AP Physics 1 / High School Junior">AP Physics 1 / High School Junior</option>
-                            <option value="AP Physics C / Senior">AP Physics C / Senior</option>
-                            <option value="General High School Physics">General High School Physics</option>
+                            <option value="AP Physics 1 / High School Junior">Class 11th</option>
+                            <option value="AP Physics C / Senior">Class 12th</option>
+                            <option value="General High School Physics">Target Batch</option>
                         </select>
                     </div>
 
@@ -180,7 +172,7 @@
                     </div>
 
                     <button type="submit" id="btnRegister" class="w-full py-3 rounded-xl bg-gradient-to-r from-physics-purple to-pink-600 font-bold text-white text-sm hover:brightness-110 transition-all shadow-lg shadow-physics-purple/20 flex items-center justify-center gap-2">
-                        <span>Create Supabase Profile</span> <i class="fa-solid fa-user-plus ml-1"></i>
+                        <span>Create Profile</span> <i class="fa-solid fa-user-plus ml-1"></i>
                     </button>
                 </form>
             </div>
@@ -194,33 +186,33 @@
     <!-- 2. APP HEADER & NAVIGATION -->
     <header class="sticky top-0 z-40 bg-physics-dark/95 backdrop-blur-md border-b border-physics-border px-4 lg:px-8 py-3">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
-            <div onclick="navigateTo('dashboard')" class="flex items-center space-x-3 cursor-pointer">
+            <a href="index.html" class="flex items-center space-x-3 cursor-pointer">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-physics-cyan to-physics-purple p-0.5 flex items-center justify-center shadow-lg shadow-physics-cyan/20">
                     <div class="w-full h-full bg-physics-dark rounded-[10px] flex items-center justify-center">
                         <i class="fa-solid fa-atom text-physics-cyan text-lg"></i>
                     </div>
                 </div>
                 <div>
-                    <span class="text-lg font-extrabold tracking-wider bg-gradient-to-r from-physics-cyan via-white to-physics-purple bg-clip-text text-transparent">QUANTUM<span class="text-physics-cyan">LAB</span></span>
-                    <span class="hidden sm:inline-block text-[10px] text-gray-400 font-mono ml-2 border-l border-gray-800 pl-2">High School Portal</span>
+                    <span class="text-lg font-extrabold tracking-wider bg-gradient-to-r from-physics-cyan via-white to-physics-purple bg-clip-text text-transparent">Physics<span class="text-physics-cyan">Repo</span></span>
+                    <span class="hidden sm:inline-block text-[10px] text-gray-400 font-mono ml-2 border-l border-gray-800 pl-2">Interactive Physics Portal</span>
                 </div>
-            </div>
+            </a>
 
             <nav class="hidden lg:flex items-center space-x-1">
-                <button id="nav-dashboard" onclick="navigateTo('dashboard')" class="px-3 py-2 rounded-lg text-xs font-medium transition-all text-physics-cyan bg-physics-cyan/10 border border-physics-cyan/30 flex items-center gap-1.5"><i class="fa-solid fa-house"></i> Dashboard</button>
-                <button id="nav-mechanics" onclick="navigateTo('mechanics')" class="px-3 py-2 rounded-lg text-xs font-medium transition-all text-gray-400 hover:text-white hover:bg-gray-800/60 flex items-center gap-1.5"><i class="fa-solid fa-plane-launch"></i> Mechanics</button>
-                <button id="nav-fluids" onclick="navigateTo('fluids')" class="px-3 py-2 rounded-lg text-xs font-medium transition-all text-gray-400 hover:text-white hover:bg-gray-800/60 flex items-center gap-1.5"><i class="fa-solid fa-droplet"></i> Fluid Dynamics</button>
-                <button id="nav-optics" onclick="navigateTo('optics')" class="px-3 py-2 rounded-lg text-xs font-medium transition-all text-gray-400 hover:text-white hover:bg-gray-800/60 flex items-center gap-1.5"><i class="fa-solid fa-glasses"></i> Optics</button>
-                <button id="nav-electrostatics" onclick="navigateTo('electrostatics')" class="px-3 py-2 rounded-lg text-xs font-medium transition-all text-gray-400 hover:text-white hover:bg-gray-800/60 flex items-center gap-1.5"><i class="fa-solid fa-bolt"></i> Electrostatics</button>
-                <button id="nav-modern" onclick="navigateTo('modern')" class="px-3 py-2 rounded-lg text-xs font-medium transition-all text-gray-400 hover:text-white hover:bg-gray-800/60 flex items-center gap-1.5"><i class="fa-solid fa-sun"></i> Modern Physics</button>
+                <a href="index.html" class="px-3 py-2 rounded-lg text-xs font-medium text-physics-cyan bg-physics-cyan/10 border border-physics-cyan/30 flex items-center gap-1.5"><i class="fa-solid fa-house"></i> Dashboard</a>
+                <a href="mechanics.html" class="px-3 py-2 rounded-lg text-xs font-medium text-gray-400 hover:text-white hover:bg-gray-800/60 transition-all flex items-center gap-1.5"><i class="fa-solid fa-plane-launch"></i> Mechanics</a>
+                <a href="fluids.html" class="px-3 py-2 rounded-lg text-xs font-medium text-gray-400 hover:text-white hover:bg-gray-800/60 transition-all flex items-center gap-1.5"><i class="fa-solid fa-droplet"></i> Fluid Dynamics</a>
+                <a href="optics.html" class="px-3 py-2 rounded-lg text-xs font-medium text-gray-400 hover:text-white hover:bg-gray-800/60 transition-all flex items-center gap-1.5"><i class="fa-solid fa-glasses"></i> Optics</a>
+                <a href="electrostatics.html" class="px-3 py-2 rounded-lg text-xs font-medium text-gray-400 hover:text-white hover:bg-gray-800/60 transition-all flex items-center gap-1.5"><i class="fa-solid fa-bolt"></i> Electrostatics</a>
+                <a href="modern.html" class="px-3 py-2 rounded-lg text-xs font-medium text-gray-400 hover:text-white hover:bg-gray-800/60 transition-all flex items-center gap-1.5"><i class="fa-solid fa-sun"></i> Modern Physics</a>
             </nav>
 
             <div class="flex items-center space-x-3">
                 <div class="flex items-center gap-2 bg-physics-card border border-physics-border px-3 py-1.5 rounded-xl">
                     <div class="w-7 h-7 rounded-full bg-gradient-to-r from-physics-cyan to-physics-purple text-slate-950 font-bold text-xs flex items-center justify-center" id="user-avatar-initials">AM</div>
                     <div class="hidden sm:block text-left">
-                        <div class="text-xs font-semibold text-white leading-tight" id="user-display-name">Alex Morgan</div>
-                        <div class="text-[10px] font-mono text-physics-cyan" id="user-progress-badge">5 Labs Active</div>
+                        <div class="text-xs font-semibold text-white leading-tight" id="user-display-name">Guest User</div>
+                        <div class="text-[10px] font-mono text-physics-cyan" id="user-progress-badge">5 Domains Ready</div>
                     </div>
                 </div>
                 <button onclick="logout()" title="Log out" class="p-2 rounded-xl bg-gray-900 hover:bg-gray-800 text-gray-400 hover:text-rose-400 border border-gray-800 transition-colors">
@@ -230,16 +222,14 @@
         </div>
     </header>
 
-    <!-- 3. MAIN ROUTED VIEWS -->
+    <!-- 3. MAIN DASHBOARD CONTENT -->
     <main class="max-w-7xl mx-auto px-4 lg:px-8 py-6 w-full flex-grow">
-        
-        <!-- DASHBOARD -->
         <section id="page-dashboard" class="space-y-6">
             <div class="bg-gradient-to-r from-physics-panel via-physics-card to-physics-dark border border-physics-border p-6 lg:p-8 rounded-2xl shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
                 <div class="space-y-2">
                     <span class="px-3 py-1 rounded-full bg-physics-cyan/10 border border-physics-cyan/30 text-physics-cyan text-xs font-mono uppercase tracking-wider">AP & High School Curriculum</span>
                     <h1 class="text-2xl lg:text-3xl font-extrabold text-white">Welcome back, <span id="welcome-name-display" class="text-physics-cyan">Alex</span>! 👋</h1>
-                    <p class="text-sm text-gray-400 max-w-xl leading-relaxed">Master physics concepts with real-time vector animations and interactive controls. Choose a module below to launch the lab.</p>
+                    <p class="text-sm text-gray-400 max-w-xl leading-relaxed">Master physics concepts with real-time vector animations, interactive simulation modals, and curated lecture libraries. Choose a domain module below to launch the lab.</p>
                     <div id="user-contact-meta" class="text-xs font-mono text-gray-400 pt-1 flex flex-wrap gap-4">
                         <span><i class="fa-solid fa-envelope text-physics-cyan mr-1"></i><span id="dash-email">student@physics.edu</span></span>
                         <span><i class="fa-solid fa-phone text-physics-purple mr-1"></i><span id="dash-phone">Not specified</span></span>
@@ -248,212 +238,78 @@
                 </div>
             </div>
 
+            <!-- Domain Cards Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div onclick="navigateTo('mechanics')" class="bg-physics-card border border-physics-border hover:border-physics-cyan p-6 rounded-2xl cursor-pointer transition-all">
-                    <div class="w-12 h-12 rounded-xl bg-physics-cyan/10 text-physics-cyan flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-plane-launch"></i></div>
-                    <h3 class="text-lg font-bold text-white">1. Classical Mechanics</h3>
-                    <p class="text-xs text-gray-400 mt-1">2D Projectile motion kinematics and parabolic trajectory tracing.</p>
-                </div>
-                <div onclick="navigateTo('fluids')" class="bg-physics-card border border-physics-border hover:border-physics-purple p-6 rounded-2xl cursor-pointer transition-all">
-                    <div class="w-12 h-12 rounded-xl bg-physics-purple/10 text-physics-purple flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-droplet"></i></div>
-                    <h3 class="text-lg font-bold text-white">2. Fluid Dynamics</h3>
-                    <p class="text-xs text-gray-400 mt-1">Archimedes' Buoyancy Principle ($F_b = \rho V g$) and flotation equilibrium.</p>
-                </div>
-                <div onclick="navigateTo('optics')" class="bg-physics-card border border-physics-border hover:border-amber-400 p-6 rounded-2xl cursor-pointer transition-all">
-                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-glasses"></i></div>
-                    <h3 class="text-lg font-bold text-white">3. Geometric Optics</h3>
-                    <p class="text-xs text-gray-400 mt-1">Thin lens equations, focal points, and real vs. virtual image ray tracing.</p>
-                </div>
-                <div onclick="navigateTo('electrostatics')" class="bg-physics-card border border-physics-border hover:border-physics-pink p-6 rounded-2xl cursor-pointer transition-all">
-                    <div class="w-12 h-12 rounded-xl bg-physics-pink/10 text-physics-pink flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-bolt"></i></div>
-                    <h3 class="text-lg font-bold text-white">4. Electrostatics</h3>
-                    <p class="text-xs text-gray-400 mt-1">Coulomb's Law, electrostatic force vectors, and charge interaction.</p>
-                </div>
-                <div onclick="navigateTo('modern')" class="bg-physics-card border border-physics-border hover:border-emerald-400 p-6 rounded-2xl cursor-pointer transition-all">
-                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-sun"></i></div>
-                    <h3 class="text-lg font-bold text-white">5. Modern Physics</h3>
-                    <p class="text-xs text-gray-400 mt-1">Einstein's Photoelectric Effect and electron kinetic energy.</p>
-                </div>
-            </div>
-        </section>
+                <!-- 1. Mechanics -->
+                <a href="mechanics.html" class="bg-physics-card border border-physics-border hover:border-physics-cyan p-6 rounded-2xl cursor-pointer transition-all block group">
+                    <div class="w-12 h-12 rounded-xl bg-physics-cyan/10 text-physics-cyan flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-plane-launch"></i>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-bold text-white group-hover:text-physics-cyan transition-colors">1. Classical Mechanics</h3>
+                        <i class="fa-solid fa-arrow-right text-gray-500 group-hover:text-physics-cyan group-hover:translate-x-1 transition-all"></i>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2">2D Projectile motion kinematics, parabolic trajectory tracing, and lecture library.</p>
+                </a>
 
-        <!-- MODULE 1: MECHANICS -->
-        <section id="page-mechanics" class="hidden space-y-6">
-            <div class="flex justify-between items-center bg-physics-card border border-physics-border p-5 rounded-2xl">
-                <div>
-                    <span class="text-xs font-mono text-physics-cyan uppercase">Module 01 • Kinematics</span>
-                    <h2 class="text-2xl font-bold text-white">2D Projectile Motion Sandbox</h2>
-                </div>
-                <button onclick="navigateTo('dashboard')" class="text-xs text-physics-cyan hover:underline">← Dashboard</button>
-            </div>
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <div class="lg:col-span-8 bg-physics-card border border-physics-border rounded-2xl overflow-hidden p-4 space-y-3">
-                    <div class="w-full h-80 bg-slate-950 rounded-xl overflow-hidden relative">
-                        <canvas id="projectileCanvas" class="w-full h-full block"></canvas>
+                <!-- 2. Fluids -->
+                <a href="fluids.html" class="bg-physics-card border border-physics-border hover:border-physics-purple p-6 rounded-2xl cursor-pointer transition-all block group">
+                    <div class="w-12 h-12 rounded-xl bg-physics-purple/10 text-physics-purple flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-droplet"></i>
                     </div>
-                    <div class="flex justify-between items-center text-xs font-mono">
-                        <div class="flex gap-2">
-                            <button onclick="toggleProjectile()" id="btn-play-proj" class="px-4 py-2 rounded-xl bg-physics-cyan text-slate-950 font-bold">Launch Projectile</button>
-                            <button onclick="resetProjectile()" class="px-3 py-2 rounded-xl bg-gray-800 text-gray-300">Reset</button>
-                        </div>
-                        <span class="text-gray-400">Position: <strong id="proj-pos" class="text-white">0.0, 0.0</strong> m</span>
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-bold text-white group-hover:text-physics-purple transition-colors">2. Fluid Dynamics</h3>
+                        <i class="fa-solid fa-arrow-right text-gray-500 group-hover:text-physics-purple group-hover:translate-x-1 transition-all"></i>
                     </div>
-                </div>
-                <div class="lg:col-span-4 bg-physics-card border border-physics-border p-5 rounded-2xl space-y-4 text-xs font-mono">
-                    <h3 class="text-sm font-bold text-white pb-2 border-b border-gray-800">Launch Parameters</h3>
-                    <div>
-                        <div class="flex justify-between text-gray-300 mb-1"><span>Launch Angle</span><span id="lbl-proj-angle" class="text-physics-cyan">45°</span></div>
-                        <input type="range" id="slider-proj-angle" min="10" max="80" value="45" oninput="updateProjectileParams()" class="w-full">
-                    </div>
-                    <div>
-                        <div class="flex justify-between text-gray-300 mb-1"><span>Initial Velocity ($v_0$)</span><span id="lbl-proj-v0" class="text-emerald-400">40 m/s</span></div>
-                        <input type="range" id="slider-proj-v0" min="10" max="80" value="40" oninput="updateProjectileParams()" class="w-full">
-                    </div>
-                </div>
-            </div>
-        </section>
+                    <p class="text-xs text-gray-400 mt-2">Archimedes' Buoyancy Principle ($F_b = \rho V g$), density controls, and flotation equilibrium.</p>
+                </a>
 
-        <!-- MODULE 2: FLUIDS -->
-        <section id="page-fluids" class="hidden space-y-6">
-            <div class="flex justify-between items-center bg-physics-card border border-physics-border p-5 rounded-2xl">
-                <div>
-                    <span class="text-xs font-mono text-physics-purple uppercase">Module 02 • Buoyancy & Density</span>
-                    <h2 class="text-2xl font-bold text-white">Archimedes' Buoyancy Tank</h2>
-                </div>
-                <button onclick="navigateTo('dashboard')" class="text-xs text-physics-cyan hover:underline">← Dashboard</button>
-            </div>
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <div class="lg:col-span-8 bg-physics-card border border-physics-border rounded-2xl overflow-hidden p-4 space-y-3">
-                    <div class="w-full h-80 bg-slate-950 rounded-xl overflow-hidden relative">
-                        <canvas id="fluidCanvas" class="w-full h-full block"></canvas>
+                <!-- 3. Optics -->
+                <a href="optics.html" class="bg-physics-card border border-physics-border hover:border-amber-400 p-6 rounded-2xl cursor-pointer transition-all block group">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-glasses"></i>
                     </div>
-                    <div class="flex justify-between text-xs font-mono text-gray-300">
-                        <span>Buoyant Force ($F_b$): <strong id="tele-fb" class="text-emerald-400">0.0 N</strong></span>
-                        <span>Equilibrium: <strong id="tele-status" class="text-physics-cyan">FLOATING</strong></span>
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-bold text-white group-hover:text-amber-400 transition-colors">3. Geometric Optics</h3>
+                        <i class="fa-solid fa-arrow-right text-gray-500 group-hover:text-amber-400 group-hover:translate-x-1 transition-all"></i>
                     </div>
-                </div>
-                <div class="lg:col-span-4 bg-physics-card border border-physics-border p-5 rounded-2xl space-y-4 text-xs font-mono">
-                    <h3 class="text-sm font-bold text-white pb-2 border-b border-gray-800">Density Settings</h3>
-                    <div>
-                        <label class="block text-gray-400 mb-1">Fluid Medium</label>
-                        <select id="select-fluid" onchange="updateFluidParams()" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-white">
-                            <option value="1000">Water (ρ = 1000 kg/m³)</option>
-                            <option value="915">Oil (ρ = 915 kg/m³)</option>
-                            <option value="1420">Honey (ρ = 1420 kg/m³)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <div class="flex justify-between text-gray-300 mb-1"><span>Block Density</span><span id="lbl-block-rho" class="text-physics-purple">600 kg/m³</span></div>
-                        <input type="range" id="slider-block-rho" min="100" max="2000" value="600" step="50" oninput="updateFluidParams()" class="w-full">
-                    </div>
-                </div>
-            </div>
-        </section>
+                    <p class="text-xs text-gray-400 mt-2">Thin lens equations, focal points, and real vs. virtual image ray tracing.</p>
+                </a>
 
-        <!-- MODULE 3: OPTICS -->
-        <section id="page-optics" class="hidden space-y-6">
-            <div class="flex justify-between items-center bg-physics-card border border-physics-border p-5 rounded-2xl">
-                <div>
-                    <span class="text-xs font-mono text-amber-400 uppercase">Module 03 • Geometric Ray Tracing</span>
-                    <h2 class="text-2xl font-bold text-white">Thin Lens Ray Optics</h2>
-                </div>
-                <button onclick="navigateTo('dashboard')" class="text-xs text-physics-cyan hover:underline">← Dashboard</button>
-            </div>
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <div class="lg:col-span-8 bg-physics-card border border-physics-border rounded-2xl overflow-hidden p-4">
-                    <div class="w-full h-80 bg-slate-950 rounded-xl overflow-hidden relative">
-                        <canvas id="opticsCanvas" class="w-full h-full block"></canvas>
+                <!-- 4. Electrostatics -->
+                <a href="electrostatics.html" class="bg-physics-card border border-physics-border hover:border-physics-pink p-6 rounded-2xl cursor-pointer transition-all block group">
+                    <div class="w-12 h-12 rounded-xl bg-physics-pink/10 text-physics-pink flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-bolt"></i>
                     </div>
-                </div>
-                <div class="lg:col-span-4 bg-physics-card border border-physics-border p-5 rounded-2xl space-y-4 text-xs font-mono">
-                    <h3 class="text-sm font-bold text-white pb-2 border-b border-gray-800">Lens Settings</h3>
-                    <div>
-                        <label class="block text-gray-400 mb-1">Lens Type</label>
-                        <select id="select-lens-type" onchange="updateOpticsParams()" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-white">
-                            <option value="convex">Convex (+f)</option>
-                            <option value="concave">Concave (-f)</option>
-                        </select>
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-bold text-white group-hover:text-physics-pink transition-colors">4. Electrostatics</h3>
+                        <i class="fa-solid fa-arrow-right text-gray-500 group-hover:text-physics-pink group-hover:translate-x-1 transition-all"></i>
                     </div>
-                    <div>
-                        <div class="flex justify-between text-gray-300 mb-1"><span>Object Distance ($d_o$)</span><span id="lbl-obj-dist" class="text-physics-cyan">25 cm</span></div>
-                        <input type="range" id="slider-obj-dist" min="8" max="45" value="25" oninput="updateOpticsParams()" class="w-full">
-                    </div>
-                </div>
-            </div>
-        </section>
+                    <p class="text-xs text-gray-400 mt-2">Coulomb's Law, electrostatic force vectors, and interactive charge dynamics.</p>
+                </a>
 
-        <!-- MODULE 4: ELECTROSTATICS -->
-        <section id="page-electrostatics" class="hidden space-y-6">
-            <div class="flex justify-between items-center bg-physics-card border border-physics-border p-5 rounded-2xl">
-                <div>
-                    <span class="text-xs font-mono text-physics-pink uppercase">Module 04 • Coulomb Fields</span>
-                    <h2 class="text-2xl font-bold text-white">Coulomb Force Simulator</h2>
-                </div>
-                <button onclick="navigateTo('dashboard')" class="text-xs text-physics-cyan hover:underline">← Dashboard</button>
-            </div>
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <div class="lg:col-span-8 bg-physics-card border border-physics-border rounded-2xl overflow-hidden p-4">
-                    <div class="w-full h-80 bg-slate-950 rounded-xl overflow-hidden relative">
-                        <canvas id="electroCanvas" class="w-full h-full block"></canvas>
+                <!-- 5. Modern Physics -->
+                <a href="modern.html" class="bg-physics-card border border-physics-border hover:border-emerald-400 p-6 rounded-2xl cursor-pointer transition-all block group">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-sun"></i>
                     </div>
-                </div>
-                <div class="lg:col-span-4 bg-physics-card border border-physics-border p-5 rounded-2xl space-y-4 text-xs font-mono">
-                    <h3 class="text-sm font-bold text-white pb-2 border-b border-gray-800">Charges</h3>
-                    <div>
-                        <div class="flex justify-between text-gray-300 mb-1"><span>Charge 1</span><span id="lbl-q1" class="text-physics-cyan">+5 µC</span></div>
-                        <input type="range" id="slider-q1" min="-10" max="10" value="5" oninput="updateElectroParams()" class="w-full">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-bold text-white group-hover:text-emerald-400 transition-colors">5. Modern Physics</h3>
+                        <i class="fa-solid fa-arrow-right text-gray-500 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all"></i>
                     </div>
-                    <div>
-                        <div class="flex justify-between text-gray-300 mb-1"><span>Charge 2</span><span id="lbl-q2" class="text-physics-pink">-5 µC</span></div>
-                        <input type="range" id="slider-q2" min="-10" max="10" value="-5" oninput="updateElectroParams()" class="w-full">
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- MODULE 5: MODERN PHYSICS -->
-        <section id="page-modern" class="hidden space-y-6">
-            <div class="flex justify-between items-center bg-physics-card border border-physics-border p-5 rounded-2xl">
-                <div>
-                    <span class="text-xs font-mono text-emerald-400 uppercase">Module 05 • Quantum & Photons</span>
-                    <h2 class="text-2xl font-bold text-white">Photoelectric Effect</h2>
-                </div>
-                <button onclick="navigateTo('dashboard')" class="text-xs text-physics-cyan hover:underline">← Dashboard</button>
-            </div>
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <div class="lg:col-span-8 bg-physics-card border border-physics-border rounded-2xl overflow-hidden p-4">
-                    <div class="w-full h-80 bg-slate-950 rounded-xl overflow-hidden relative">
-                        <canvas id="modernCanvas" class="w-full h-full block"></canvas>
-                    </div>
-                </div>
-                <div class="lg:col-span-4 bg-physics-card border border-physics-border p-5 rounded-2xl space-y-4 text-xs font-mono">
-                    <h3 class="text-sm font-bold text-white pb-2 border-b border-gray-800">Light Controls</h3>
-                    <div>
-                        <div class="flex justify-between text-gray-300 mb-1"><span>Wavelength</span><span id="lbl-wavelength" class="text-physics-cyan">400 nm</span></div>
-                        <input type="range" id="slider-wavelength" min="200" max="750" value="400" oninput="updateModernParams()" class="w-full">
-                    </div>
-                </div>
+                    <p class="text-xs text-gray-400 mt-2">Einstein's Photoelectric Effect, photon energy, and electron kinetic energy ejection.</p>
+                </a>
             </div>
         </section>
     </main>
 
-    <!-- 4. PHYSICS SIMULATION ENGINE & VIEW ROUTING -->
-    <script>
-        function navigateTo(pageId) {
-            const pages = ['dashboard', 'mechanics', 'fluids', 'optics', 'electrostatics', 'modern'];
-            pages.forEach(p => {
-                const el = document.getElementById('page-' + p);
-                if (el) el.classList.toggle('hidden', p !== pageId);
-                const nav = document.getElementById('nav-' + p);
-                if (nav) {
-                    nav.className = (p === pageId) 
-                        ? "px-3 py-2 rounded-lg text-xs font-medium text-physics-cyan bg-physics-cyan/10 border border-physics-cyan/30 flex items-center gap-1.5"
-                        : "px-3 py-2 rounded-lg text-xs font-medium text-gray-400 hover:text-white hover:bg-gray-800/60 flex items-center gap-1.5";
-                }
-            });
-            setTimeout(resizeAndRedrawActiveCanvas, 60);
-        }
+    <!-- Footer -->
+    <footer class="border-t border-physics-border py-4 px-4 text-center text-xs font-mono text-gray-500">
+        PhysicsRepo • Interactive AP & High School Physics Learning Environment
+    </footer>
 
+    <!-- App State & Supabase Auth Integration -->
+    <script>
         function guestLogin() {
             document.getElementById('auth-overlay').classList.add('hidden');
         }
@@ -463,246 +319,6 @@
                 window.handleSupabaseLogout();
             }
             document.getElementById('auth-overlay').classList.remove('hidden');
-        }
-
-        let projCanvas, projCtx, fluidCanvas, fluidCtx, opticsCanvas, opticsCtx, electroCanvas, electroCtx, modernCanvas, modernCtx;
-        
-        const projState = { angle: 45, v0: 40, g: 9.81, t: 0, isPlaying: false, trail: [] };
-        const fluidState = { rhoFluid: 1000, rhoBlock: 600, volBlock: 0.05, g: 9.81 };
-        const opticsState = { type: 'convex', focal: 10, do: 25, ho: 6 };
-        const electroState = { q1: 5, q2: -5, r: 2.0 };
-        const modernState = { metalPhi: 2.28, lambda: 400 };
-
-        window.onload = function() {
-            projCanvas = document.getElementById('projectileCanvas'); projCtx = projCanvas?.getContext('2d');
-            fluidCanvas = document.getElementById('fluidCanvas'); fluidCtx = fluidCanvas?.getContext('2d');
-            opticsCanvas = document.getElementById('opticsCanvas'); opticsCtx = opticsCanvas?.getContext('2d');
-            electroCanvas = document.getElementById('electroCanvas'); electroCtx = electroCanvas?.getContext('2d');
-            modernCanvas = document.getElementById('modernCanvas'); modernCtx = modernCanvas?.getContext('2d');
-
-            window.addEventListener('resize', resizeAndRedrawActiveCanvas);
-            resizeAndRedrawActiveCanvas();
-
-            updateProjectileParams();
-            updateFluidParams();
-            updateOpticsParams();
-            updateElectroParams();
-            updateModernParams();
-
-            requestAnimationFrame(mainAnimationLoop);
-        };
-
-        function safeResize(canvas) {
-            if (!canvas || !canvas.parentElement) return;
-            const w = canvas.parentElement.clientWidth || 800;
-            const h = canvas.parentElement.clientHeight || 320;
-            if (canvas.width !== w || canvas.height !== h) {
-                canvas.width = w;
-                canvas.height = h;
-            }
-        }
-
-        function resizeAndRedrawActiveCanvas() {
-            safeResize(projCanvas); drawProjectile();
-            safeResize(fluidCanvas); drawFluid();
-            safeResize(opticsCanvas); drawOptics();
-            safeResize(electroCanvas); drawElectro();
-            safeResize(modernCanvas); drawModern();
-        }
-
-        // 1. Projectile Engine
-        function updateProjectileParams() {
-            projState.angle = parseFloat(document.getElementById('slider-proj-angle').value);
-            projState.v0 = parseFloat(document.getElementById('slider-proj-v0').value);
-            document.getElementById('lbl-proj-angle').textContent = projState.angle + '°';
-            document.getElementById('lbl-proj-v0').textContent = projState.v0 + ' m/s';
-            
-            // Instantly start fresh upon changing parameters
-            resetProjectile();
-        }
-
-        function resetProjectile() {
-            projState.isPlaying = false;
-            projState.t = 0;
-            projState.trail = [];
-            const btn = document.getElementById('btn-play-proj');
-            if (btn) btn.textContent = "Launch Projectile";
-            drawProjectile();
-        }
-
-        function toggleProjectile() {
-            projState.isPlaying = !projState.isPlaying;
-            const btn = document.getElementById('btn-play-proj');
-            if (btn) btn.textContent = projState.isPlaying ? "Pause" : "Launch Projectile";
-            if (projState.isPlaying && projState.t > 0 && !projState.trail.length) {
-                projState.t = 0;
-            }
-        }
-
-        function drawProjectile() {
-            if (!projCtx) return;
-            const w = projCanvas.width || 800, h = projCanvas.height || 320;
-            projCtx.clearRect(0, 0, w, h);
-
-            const groundY = h - 30;
-            projCtx.strokeStyle = '#06B6D4'; projCtx.lineWidth = 2;
-            projCtx.beginPath(); projCtx.moveTo(0, groundY); projCtx.lineTo(w, groundY); projCtx.stroke();
-
-            const rad = projState.angle * Math.PI / 180;
-            const vx0 = projState.v0 * Math.cos(rad);
-            const vy0 = projState.v0 * Math.sin(rad);
-
-            const x = vx0 * projState.t;
-            const y = vy0 * projState.t - 0.5 * projState.g * projState.t * projState.t;
-
-            if (y < 0 && projState.isPlaying) {
-                projState.isPlaying = false;
-                const btn = document.getElementById('btn-play-proj');
-                if (btn) btn.textContent = "Re-launch Projectile";
-            }
-
-            const scale = 5;
-            const px = 50 + x * scale;
-            const py = groundY - Math.max(0, y) * scale;
-
-            if (projState.isPlaying) projState.trail.push({ x: px, y: py });
-
-            if (projState.trail.length > 1) {
-                projCtx.strokeStyle = 'rgba(6, 182, 212, 0.5)'; projCtx.setLineDash([4, 4]);
-                projCtx.beginPath(); projCtx.moveTo(projState.trail[0].x, projState.trail[0].y);
-                for (let i = 1; i < projState.trail.length; i++) projCtx.lineTo(projState.trail[i].x, projState.trail[i].y);
-                projCtx.stroke(); projCtx.setLineDash([]);
-            }
-
-            projCtx.fillStyle = '#38BDF8';
-            projCtx.beginPath(); projCtx.arc(px, py, 7, 0, Math.PI * 2); projCtx.fill();
-
-            const posEl = document.getElementById('proj-pos');
-            if (posEl) posEl.textContent = `${x.toFixed(1)}, ${Math.max(0, y).toFixed(1)}`;
-        }
-
-        // 2. Fluid Engine
-        function updateFluidParams() {
-            fluidState.rhoFluid = parseFloat(document.getElementById('select-fluid').value);
-            fluidState.rhoBlock = parseFloat(document.getElementById('slider-block-rho').value);
-            document.getElementById('lbl-block-rho').textContent = fluidState.rhoBlock + ' kg/m³';
-            drawFluid();
-        }
-
-        function drawFluid() {
-            if (!fluidCtx) return;
-            const w = fluidCanvas.width || 800, h = fluidCanvas.height || 320;
-            fluidCtx.clearRect(0, 0, w, h);
-
-            const surfaceY = h * 0.45;
-            fluidCtx.fillStyle = 'rgba(6, 182, 212, 0.25)';
-            fluidCtx.fillRect(40, surfaceY, w - 80, h - surfaceY - 20);
-            fluidCtx.strokeStyle = '#06B6D4';
-            fluidCtx.strokeRect(40, surfaceY, w - 80, h - surfaceY - 20);
-
-            let subFraction = Math.min(1.0, fluidState.rhoBlock / fluidState.rhoFluid);
-            const side = 60;
-            const bx = w / 2 - side / 2;
-            let by = (fluidState.rhoBlock > fluidState.rhoFluid) 
-                ? (h - 20 - side) 
-                : (surfaceY - (1 - subFraction) * side);
-
-            fluidCtx.fillStyle = '#F59E0B'; fluidCtx.fillRect(bx, by, side, side);
-            fluidCtx.strokeStyle = '#FBBF24'; fluidCtx.strokeRect(bx, by, side, side);
-
-            const fb = fluidState.rhoFluid * fluidState.volBlock * subFraction * fluidState.g;
-            document.getElementById('tele-fb').textContent = fb.toFixed(1) + ' N';
-            document.getElementById('tele-status').textContent = (fluidState.rhoBlock > fluidState.rhoFluid) ? "SUNK" : "FLOATING";
-        }
-
-        // 3. Optics Engine
-        function updateOpticsParams() {
-            opticsState.type = document.getElementById('select-lens-type').value;
-            opticsState.do = parseFloat(document.getElementById('slider-obj-dist').value);
-            document.getElementById('lbl-obj-dist').textContent = opticsState.do + ' cm';
-            drawOptics();
-        }
-
-        function drawOptics() {
-            if (!opticsCtx) return;
-            const w = opticsCanvas.width || 800, h = opticsCanvas.height || 320;
-            opticsCtx.clearRect(0, 0, w, h);
-
-            const midY = h / 2, lx = w / 2, scale = 7;
-            opticsCtx.strokeStyle = '#475569'; opticsCtx.setLineDash([4, 4]);
-            opticsCtx.beginPath(); opticsCtx.moveTo(0, midY); opticsCtx.lineTo(w, midY); opticsCtx.stroke(); opticsCtx.setLineDash([]);
-
-            opticsCtx.strokeStyle = '#F59E0B'; opticsCtx.lineWidth = 3;
-            opticsCtx.beginPath(); opticsCtx.moveTo(lx, midY - 90); opticsCtx.lineTo(lx, midY + 90); opticsCtx.stroke();
-
-            const ox = lx - opticsState.do * scale;
-            opticsCtx.strokeStyle = '#06B6D4'; opticsCtx.lineWidth = 2;
-            opticsCtx.beginPath(); opticsCtx.moveTo(ox, midY); opticsCtx.lineTo(ox, midY - 40); opticsCtx.stroke();
-        }
-
-        // 4. Electrostatics Engine
-        function updateElectroParams() {
-            electroState.q1 = parseFloat(document.getElementById('slider-q1').value);
-            electroState.q2 = parseFloat(document.getElementById('slider-q2').value);
-            document.getElementById('lbl-q1').textContent = (electroState.q1 > 0 ? '+' : '') + electroState.q1 + ' µC';
-            document.getElementById('lbl-q2').textContent = (electroState.q2 > 0 ? '+' : '') + electroState.q2 + ' µC';
-            drawElectro();
-        }
-
-        function drawElectro() {
-            if (!electroCtx) return;
-            const w = electroCanvas.width || 800, h = electroCanvas.height || 320;
-            electroCtx.clearRect(0, 0, w, h);
-
-            const midY = h / 2, c1x = w / 2 - 100, c2x = w / 2 + 100;
-            electroCtx.fillStyle = electroState.q1 >= 0 ? '#06B6D4' : '#EC4899';
-            electroCtx.beginPath(); electroCtx.arc(c1x, midY, 18, 0, Math.PI * 2); electroCtx.fill();
-
-            electroCtx.fillStyle = electroState.q2 >= 0 ? '#06B6D4' : '#EC4899';
-            electroCtx.beginPath(); electroCtx.arc(c2x, midY, 18, 0, Math.PI * 2); electroCtx.fill();
-        }
-
-        // 5. Modern Physics Engine
-        function updateModernParams() {
-            modernState.lambda = parseFloat(document.getElementById('slider-wavelength').value);
-            document.getElementById('lbl-wavelength').textContent = modernState.lambda + ' nm';
-            drawModern();
-        }
-
-        function drawModern() {
-            if (!modernCtx) return;
-            const w = modernCanvas.width || 800, h = modernCanvas.height || 320;
-            modernCtx.clearRect(0, 0, w, h);
-
-            modernCtx.fillStyle = '#475569';
-            modernCtx.fillRect(100, 60, 20, h - 120);
-
-            modernCtx.strokeStyle = modernState.lambda < 400 ? '#A855F7' : '#06B6D4';
-            modernCtx.lineWidth = 4;
-            modernCtx.beginPath(); modernCtx.moveTo(20, 40); modernCtx.lineTo(100, h / 2); modernCtx.stroke();
-
-            const kMax = (1240 / modernState.lambda) - modernState.metalPhi;
-            if (kMax > 0) {
-                for (let i = 0; i < 4; i++) {
-                    const ex = 130 + ((Date.now() / 15 * 3 + i * 50) % (w - 160));
-                    modernCtx.fillStyle = '#10B981';
-                    modernCtx.beginPath(); modernCtx.arc(ex, h / 2 + (i - 1.5) * 16, 5, 0, Math.PI * 2); modernCtx.fill();
-                }
-            }
-        }
-
-        let lastTime = 0;
-        function mainAnimationLoop(timestamp) {
-            const dt = (timestamp - lastTime) / 1000;
-            lastTime = timestamp;
-
-            if (projState.isPlaying) {
-                projState.t += dt;
-                drawProjectile();
-            }
-
-            drawModern();
-            requestAnimationFrame(mainAnimationLoop);
         }
     </script>
 
