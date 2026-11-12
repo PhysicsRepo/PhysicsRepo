@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Physics - PhysicsRepo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        physics: {
+                            dark: '#070A13',
+                            panel: '#0F172A',
+                            card: '#131C31',
+                            border: '#1E293B',
+                            cyan: '#06B6D4',
+                            purple: '#A855F7',
+                            emerald: '#10B981',
+                            pink: '#EC4899',
+                            amber: '#F59E0B'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body class="bg-[#070A13] text-gray-100 min-h-screen flex flex-col font-sans">
+
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-40 bg-physics-dark/95 backdrop-blur-md border-b border-physics-border px-4 lg:px-8 py-3">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <a href="index.html" class="flex items-center space-x-3 cursor-pointer">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-physics-cyan to-physics-purple p-0.5 flex items-center justify-center shadow-lg shadow-physics-cyan/20">
+                    <div class="w-full h-full bg-physics-dark rounded-[10px] flex items-center justify-center">
+                        <i class="fa-solid fa-atom text-physics-cyan text-lg"></i>
+                    </div>
+                </div>
+                <div>
+                    <span class="text-lg font-extrabold tracking-wider bg-gradient-to-r from-physics-cyan via-white to-physics-purple bg-clip-text text-transparent">PHYSICS<span class="text-physics-cyan">REPO</span></span>
+                    <span class="hidden sm:inline-block text-[10px] text-gray-400 font-mono ml-2 border-l border-gray-800 pl-2">The Physics Academy</span>
+                </div>
+            </a>
+
+            <nav class="hidden lg:flex items-center space-x-1">
+                <a href="index.html" class="px-3 py-2 rounded-lg text-xs font-medium text-gray-400 hover:text-white hover:bg-gray-800/60 transition-all flex items-center gap-1.5"><i class="fa-solid fa-house"></i> Dashboard</a>
+                <a href="mechanics.html" class="px-3 py-2 rounded-lg text-xs font-medium text-gray-400 hover:text-white hover:bg-gray-800/60 transition-all flex items-center gap-1.5"><i class="fa-solid fa-plane-launch"></i> Mechanics</a>
+                <a href="fluids.html" class="px-3 py-2 rounded-lg text-xs font-medium text-gray-400 hover:text-white hover:bg-gray-800/60 transition-all flex items-center gap-1.5"><i class="fa-solid fa-droplet"></i> Fluids</a>
+                <a href="optics.html" class="px-3 py-2 rounded-lg text-xs font-medium text-gray-400 hover:text-white hover:bg-gray-800/60 transition-all flex items-center gap-1.5"><i class="fa-solid fa-glasses"></i> Optics</a>
+                <a href="electrostatics.html" class="px-3 py-2 rounded-lg text-xs font-medium text-gray-400 hover:text-white hover:bg-gray-800/60 transition-all flex items-center gap-1.5"><i class="fa-solid fa-bolt"></i> Electrostatics</a>
+                <a href="modern.html" class="px-3 py-2 rounded-lg text-xs font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-1.5"><i class="fa-solid fa-sun"></i> Modern</a>
+            </nav>
+
+            <div class="flex items-center space-x-3">
+                <div class="flex items-center gap-2 bg-physics-card border border-physics-border px-3 py-1.5 rounded-xl">
+                    <div class="w-7 h-7 rounded-full bg-gradient-to-r from-physics-cyan to-physics-purple text-slate-950 font-bold text-xs flex items-center justify-center" id="user-avatar-initials">GS</div>
+                    <div class="hidden sm:block text-left">
+                        <div class="text-xs font-semibold text-white leading-tight" id="user-display-name">Guest Student</div>
+                        <div class="text-[10px] font-mono text-emerald-400">Modern Physics Lab</div>
+                    </div>
+                </div>
+                <a href="index.html" title="Dashboard" class="p-2 rounded-xl bg-gray-900 hover:bg-gray-800 text-gray-400 hover:text-physics-cyan border border-gray-800 transition-colors">
+                    <i class="fa-solid fa-house"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 lg:px-8 py-8 w-full flex-grow space-y-8">
+        
+        <!-- Domain Header -->
+        <div class="bg-gradient-to-r from-physics-panel via-physics-card to-physics-dark border border-physics-border p-6 lg:p-8 rounded-2xl shadow-xl">
+            <div class="space-y-2 max-w-3xl">
+                <span class="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono uppercase tracking-wider">Module 05 • Quantum, Atomic & Nuclear</span>
+                <h1 class="text-2xl lg:text-3xl font-extrabold text-white">Modern Physics</h1>
+                <p class="text-sm text-gray-400 leading-relaxed">
+                    Investigate quantized photon energy in the photoelectric effect, Bohr hydrogen atomic transitions and emission spectra, and exponential radioactive half-life decay.
+                </p>
+            </div>
+        </div>
+
+        <!-- Interactive Simulations Grid (3 Simulations) -->
+        <section class="space-y-4">
+            <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-flask text-emerald-400"></i> Interactive Simulation Labs
+                </h2>
+                <span class="text-xs text-gray-400 font-mono">Click any lab to launch sandbox</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <!-- Lab 1: Photoelectric Effect -->
+                <div class="bg-physics-card border border-physics-border hover:border-emerald-400 p-5 rounded-2xl flex flex-col justify-between space-y-4 transition-all">
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg">Lab 5.1</span>
+                            <i class="fa-solid fa-sun text-emerald-400"></i>
+                        </div>
+                        <h3 class="text-base font-bold text-white">Photoelectric Effect Lab</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed">Vary photon wavelength ($\lambda$) and target metal work function ($\Phi$) to measure ejected photoelectron kinetic energy ($K_{\text{max}}$).</p>
+                    </div>
+                    <button onclick="openModernModal('photoelectric')" class="w-full py-2.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-400 text-emerald-400 hover:text-slate-950 font-bold text-xs border border-emerald-500/30 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-play"></i> Launch Simulation
+                    </button>
+                </div>
+
+                <!-- Lab 2: Bohr Hydrogen Atom -->
+                <div class="bg-physics-card border border-physics-border hover:border-physics-cyan p-5 rounded-2xl flex flex-col justify-between space-y-4 transition-all">
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-mono text-physics-cyan bg-physics-cyan/10 px-2.5 py-1 rounded-lg">Lab 5.2</span>
+                            <i class="fa-solid fa-atom text-physics-cyan"></i>
+                        </div>
+                        <h3 class="text-base font-bold text-white">Bohr Hydrogen & Spectra</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed">Trigger electron transitions across quantized orbits ($E_n = -13.6/n^2\text{ eV}$) and observe emitted Lyman/Balmer photons.</p>
+                    </div>
+                    <button onclick="openModernModal('bohr')" class="w-full py-2.5 rounded-xl bg-physics-cyan/15 hover:bg-physics-cyan text-physics-cyan hover:text-slate-950 font-bold text-xs border border-physics-cyan/30 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-play"></i> Launch Simulation
+                    </button>
+                </div>
+
+                <!-- Lab 3: Radioactive Decay & Half-Life -->
+                <div class="bg-physics-card border border-physics-border hover:border-physics-purple p-5 rounded-2xl flex flex-col justify-between space-y-4 transition-all">
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-mono text-physics-purple bg-physics-purple/10 px-2.5 py-1 rounded-lg">Lab 5.3</span>
+                            <i class="fa-solid fa-radiation text-physics-purple"></i>
+                        </div>
+                        <h3 class="text-base font-bold text-white">Radioactive Half-Life Decay</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed">Watch stochastic nuclear decay in real time alongside an exponential decay curve ($N(t) = N_0 (1/2)^{t/T_{1/2}}$).</p>
+                    </div>
+                    <button onclick="openModernModal('decay')" class="w-full py-2.5 rounded-xl bg-physics-purple/15 hover:bg-physics-purple text-physics-purple hover:text-white font-bold text-xs border border-physics-purple/30 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-play"></i> Launch Simulation
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- YouTube Video Lectures Section -->
+        <section class="space-y-4">
+            <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-brands fa-youtube text-red-500"></i> Curated Lecture Library
+                </h2>
+                <span class="text-xs text-gray-400 font-mono">Select a video to study</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Video Card Placeholder 1 -->
+                <div class="bg-physics-card border border-physics-border border-dashed rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-2 text-gray-500 min-h-[220px]">
+                    <i class="fa-brands fa-youtube text-3xl text-gray-600"></i>
+                    <span class="text-xs font-mono font-medium text-gray-400">Einstein's Photoelectric Effect</span>
+                    <p class="text-[11px] text-gray-500">Insert YouTube video ID and title in modern.html</p>
+                </div>
+
+                <!-- Video Card Placeholder 2 -->
+                <div class="bg-physics-card border border-physics-border border-dashed rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-2 text-gray-500 min-h-[220px]">
+                    <i class="fa-brands fa-youtube text-3xl text-gray-600"></i>
+                    <span class="text-xs font-mono font-medium text-gray-400">Bohr Model & Atomic Emission Spectra</span>
+                    <p class="text-[11px] text-gray-500">Insert YouTube video ID and title in modern.html</p>
+                </div>
+
+                <!-- Video Card Placeholder 3 -->
+                <div class="bg-physics-card border border-physics-border border-dashed rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-2 text-gray-500 min-h-[220px]">
+                    <i class="fa-brands fa-youtube text-3xl text-gray-600"></i>
+                    <span class="text-xs font-mono font-medium text-gray-400">Radioactive Decay & Half-Life</span>
+                    <p class="text-[11px] text-gray-500">Insert YouTube video ID and title in modern.html</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- MODAL 1: PHOTOELECTRIC EFFECT LAB          -->
+    <!-- ========================================== -->
+    <div id="modal-photoelectric" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-3 lg:p-6">
+        <div class="bg-physics-card border border-physics-border rounded-2xl w-full max-w-5xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-physics-border bg-physics-panel/60">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <h3 class="font-bold text-white text-base">Lab 5.1: Einstein's Photoelectric Effect</h3>
+                </div>
+                <button onclick="closeModernModal('photoelectric')" class="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-gray-800 transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 overflow-y-auto">
+                <div class="lg:col-span-8 space-y-3">
+                    <div class="w-full h-80 bg-slate-950 rounded-xl overflow-hidden border border-physics-border relative">
+                        <canvas id="modernCanvas" class="w-full h-full block"></canvas>
+                    </div>
+                    <div class="flex flex-wrap justify-between gap-2 text-xs font-mono text-gray-300">
+                        <span>Photon ($E_\gamma$): <strong id="pe-ephoton" class="text-physics-cyan">3.10 eV</strong></span>
+                        <span>Max $K_e$: <strong id="pe-kmax" class="text-emerald-400">0.82 eV</strong></span>
+                        <span>Emission: <strong id="pe-status" class="text-emerald-400">ACTIVE</strong></span>
+                    </div>
+                </div>
+                <div class="lg:col-span-4 bg-physics-panel/40 border border-physics-border p-5 rounded-2xl space-y-4 text-xs font-mono">
+                    <h4 class="text-sm font-bold text-white pb-2 border-b border-gray-800">Photon & Target Controls</h4>
+                    <div>
+                        <label class="block text-gray-400 mb-1">Target Metal ($\Phi$)</label>
+                        <select id="select-pe-metal" onchange="updateModernParams()" class="w-full bg-physics-panel border border-physics-border rounded-xl px-3 py-2 text-white">
+                            <option value="2.28">Sodium ($\Phi = 2.28$ eV)</option>
+                            <option value="4.30">Zinc ($\Phi = 4.30$ eV)</option>
+                            <option value="4.70">Copper ($\Phi = 4.70$ eV)</option>
+                            <option value="6.35">Platinum ($\Phi = 6.35$ eV)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-gray-300 mb-1"><span>Wavelength ($\lambda$)</span><span id="lbl-wavelength" class="text-physics-cyan">400 nm</span></div>
+                        <input type="range" id="slider-wavelength" min="150" max="750" value="400" oninput="updateModernParams()" class="w-full accent-physics-cyan">
+                    </div>
+                    <div class="pt-2 text-gray-400 text-[11px] leading-relaxed border-t border-gray-800">
+                        Photoelectric Equation: <br>
+                        $K_{\text{max}} = \frac{hc}{\lambda} - \Phi$
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL 2: BOHR HYDROGEN ATOM & SPECTRA      -->
+    <!-- ========================================== -->
+    <div id="modal-bohr" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-3 lg:p-6">
+        <div class="bg-physics-card border border-physics-border rounded-2xl w-full max-w-5xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-physics-border bg-physics-panel/60">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-physics-cyan animate-pulse"></span>
+                    <h3 class="font-bold text-white text-base">Lab 5.2: Bohr Hydrogen Atom & Emission Spectrum</h3>
+                </div>
+                <button onclick="closeModernModal('bohr')" class="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-gray-800 transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 overflow-y-auto">
+                <div class="lg:col-span-8 space-y-3">
+                    <div class="w-full h-80 bg-slate-950 rounded-xl overflow-hidden border border-physics-border relative">
+                        <canvas id="bohrCanvas" class="w-full h-full block"></canvas>
+                    </div>
+                    <div class="flex flex-wrap justify-between gap-2 text-xs font-mono text-gray-300">
+                        <span>Transition: <strong id="bohr-trans" class="text-physics-cyan">n = 3 → n = 2</strong></span>
+                        <span>Photon $\lambda$: <strong id="bohr-lambda" class="text-rose-400">656.3 nm</strong></span>
+                        <span>Series: <strong id="bohr-series" class="text-amber-400">BALMER (VISIBLE)</strong></span>
+                    </div>
+                </div>
+                <div class="lg:col-span-4 bg-physics-panel/40 border border-physics-border p-5 rounded-2xl space-y-4 text-xs font-mono">
+                    <h4 class="text-sm font-bold text-white pb-2 border-b border-gray-800">Quantum Orbit Controls</h4>
+                    <div>
+                        <label class="block text-gray-400 mb-1">Select Target Orbit ($n$)</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="setBohrOrbit(1)" class="py-2 rounded-lg bg-physics-panel hover:bg-physics-cyan hover:text-slate-950 border border-physics-border font-bold transition-colors">n = 1</button>
+                            <button onclick="setBohrOrbit(2)" class="py-2 rounded-lg bg-physics-panel hover:bg-physics-cyan hover:text-slate-950 border border-physics-border font-bold transition-colors">n = 2</button>
+                            <button onclick="setBohrOrbit(3)" class="py-2 rounded-lg bg-physics-panel hover:bg-physics-cyan hover:text-slate-950 border border-physics-border font-bold transition-colors">n = 3</button>
+                            <button onclick="setBohrOrbit(4)" class="py-2 rounded-lg bg-physics-panel hover:bg-physics-cyan hover:text-slate-950 border border-physics-border font-bold transition-colors">n = 4</button>
+                            <button onclick="setBohrOrbit(5)" class="py-2 rounded-lg bg-physics-panel hover:bg-physics-cyan hover:text-slate-950 border border-physics-border font-bold transition-colors">n = 5</button>
+                            <button onclick="setBohrOrbit(6)" class="py-2 rounded-lg bg-physics-panel hover:bg-physics-cyan hover:text-slate-950 border border-physics-border font-bold transition-colors">n = 6</button>
+                        </div>
+                    </div>
+                    <div class="bg-physics-dark/70 p-3 rounded-xl border border-gray-800 space-y-1">
+                        <div class="text-gray-400">Current State Energy:</div>
+                        <div id="bohr-energy" class="text-sm font-bold text-emerald-400">-3.40 eV</div>
+                    </div>
+                    <div class="pt-1 text-gray-400 text-[11px] leading-relaxed">
+                        Bohr Energy Levels: <br>
+                        $E_n = -\frac{13.6\text{ eV}}{n^2}$
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL 3: RADIOACTIVE DECAY & HALF-LIFE     -->
+    <!-- ========================================== -->
+    <div id="modal-decay" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-3 lg:p-6">
+        <div class="bg-physics-card border border-physics-border rounded-2xl w-full max-w-5xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-physics-border bg-physics-panel/60">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-physics-purple animate-pulse"></span>
+                    <h3 class="font-bold text-white text-base">Lab 5.3: Radioactive Decay & Half-Life Curve</h3>
+                </div>
+                <button onclick="closeModernModal('decay')" class="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-gray-800 transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div class="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 overflow-y-auto">
+                <div class="lg:col-span-8 space-y-3">
+                    <div class="w-full h-80 bg-slate-950 rounded-xl overflow-hidden border border-physics-border relative">
+                        <canvas id="decayCanvas" class="w-full h-full block"></canvas>
+                    </div>
+                    <div class="flex flex-wrap justify-between items-center gap-2 text-xs font-mono text-gray-300">
+                        <div class="flex gap-2">
+                            <button onclick="toggleDecay()" id="btn-play-decay" class="px-4 py-2 rounded-xl bg-physics-purple text-white font-bold hover:brightness-110">Start Decay</button>
+                            <button onclick="resetDecay()" class="px-3 py-2 rounded-xl bg-gray-800 text-gray-300 hover:bg-gray-700">Reset Sample</button>
+                        </div>
+                        <div class="flex gap-4">
+                            <span>Elapsed: <strong id="decay-time" class="text-physics-cyan">0.0 s</strong></span>
+                            <span>Parent ($N$): <strong id="decay-rem" class="text-emerald-400">100 / 100</strong></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:col-span-4 bg-physics-panel/40 border border-physics-border p-5 rounded-2xl space-y-4 text-xs font-mono">
+                    <h4 class="text-sm font-bold text-white pb-2 border-b border-gray-800">Isotope Settings</h4>
+                    <div>
+                        <div class="flex justify-between text-gray-300 mb-1"><span>Half-Life ($T_{1/2}$)</span><span id="lbl-decay-hl" class="text-physics-purple">3.0 s</span></div>
+                        <input type="range" id="slider-decay-hl" min="1.0" max="8.0" step="0.5" value="3.0" oninput="updateDecayParams()" class="w-full accent-physics-purple">
+                    </div>
+                    <div class="space-y-1.5 pt-2 text-[11px]">
+                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-physics-purple inline-block"></span> Unstable Parent Nucleus</div>
+                        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-emerald-400 inline-block"></span> Stable Daughter Nucleus</div>
+                    </div>
+                    <div class="pt-2 text-gray-400 text-[11px] leading-relaxed border-t border-gray-800">
+                        Exponential Decay Law: <br>
+                        $N(t) = N_0 \left(\frac{1}{2}\right)^{t / T_{1/2}}$
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Decoupled Modern Physics Engine & Supabase Auth -->
+    <script src="js/modern.js"></script>
+    <script src="auth.js"></script>
+</body>
+</html>
