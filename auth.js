@@ -280,6 +280,16 @@ window.handleSupabaseLogout = async function() {
             console.warn("Signout error:", e);
         }
     }
+
+    // Clear typed credentials from both forms
+    document.getElementById('loginForm')?.reset();
+    document.getElementById('registerForm')?.reset();
+
+    const emailInput = document.getElementById('loginEmail');
+    const passInput = document.getElementById('loginPassword');
+    if (emailInput) emailInput.value = '';
+    if (passInput) passInput.value = '';
+    
     resetProfileUI();
     showAuthOverlay();
 };
