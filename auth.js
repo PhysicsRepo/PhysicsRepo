@@ -1,5 +1,7 @@
 /**
  * auth.js - Dedicated Supabase Auth & Profile Handler
+ * Handles authentication state, real-time session subscriptions,
+ * registration, login, logout, and cross-page profile hydration.
  */
 
 (function loadSupabaseScript() {
@@ -24,10 +26,54 @@ function initSupabaseAuth() {
         if (window.supabase) {
             supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             bindAuthEvents();
-            checkSession();
+            setupAuthSubscription();
         }
     } catch (e) {
         console.error("Supabase init error:", e);
+    }
+}
+
+/**
+ * Listens for auth state changes (login, logout, token refresh, initial session)
+ * across both the index dashboard and decoupled domain pages.
+ */
+function setupAuthSubscription() {
+    if (!supabaseClient) return;
+
+    // Initial session check
+    supabaseClient.auth.getSession().then(({ data: { session } }) => {
+        if (session && session.user) {
+            hydrateProfile(session.user);
+            hideAuthOverlay();
+        }
+    }).catch(err => {
+        console.log("No existing session:", err.message);
+    });
+
+    // Real-time auth state listener
+    supabaseClient.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_IN' && session?.user) {
+            hydrateProfile(session.user);
+            hideAuthOverlay();
+        } else if (event === 'SIGNED_OUT') {
+            resetProfileUI();
+        } else if (event === 'TOKEN_REFRESHED' && session?.user) {
+            hydrateProfile(session.user);
+        }
+    });
+}
+
+function hideAuthOverlay() {
+    const overlay = document.getElementById('auth-overlay');
+    if (overlay) {
+        overlay.classList.add('hidden');
+    }
+}
+
+function showAuthOverlay() {
+    const overlay = document.getElementById('auth-overlay');
+    if (overlay) {
+        overlay.classList.remove('hidden');
     }
 }
 
@@ -47,30 +93,29 @@ function clearStatus() {
     authStatus.className = 'hidden';
 }
 
-async function checkSession() {
-    if (!supabaseClient) return;
-    try {
-        const { data: { session } } = await supabaseClient.auth.getSession();
-        if (session && session.user) {
-            hydrateProfile(session.user);
-            document.getElementById('auth-overlay')?.classList.add('hidden');
-        }
-    } catch (e) {
-        console.log("No active session:", e.message);
-    }
-}
-
+/**
+ * Hydrates UI elements across pages (header initials, display names, and dashboard labels).
+ * Gracefully ignores elements that don't exist on the current page.
+ */
 async function hydrateProfile(user) {
-    try {
-        const { data } = await supabaseClient
-            .from('profiles')
-            .select('*')
-            .eq('id', user.id)
-            .maybeSingle();
+    if (!user) return;
 
-        const name = data?.full_name || user.user_metadata?.full_name || user.email.split('@')[0];
-        const phone = data?.mobile_number || user.user_metadata?.mobile || "Not specified";
-        const grade = data?.grade_level || user.user_metadata?.grade || "AP Physics 1";
+    try {
+        let profile = null;
+        if (supabaseClient) {
+            const { data, error } = await supabaseClient
+                .from('profiles')
+                .select('*')
+                .eq('id', user.id)
+                .maybeSingle();
+            if (!error && data) {
+                profile = data;
+            }
+        }
+
+        const name = profile?.full_name || user.user_metadata?.full_name || (user.email ? user.email.split('@')[0] : 'Student');
+        const phone = profile?.mobile_number || user.user_metadata?.mobile || "Not specified";
+        const grade = profile?.grade_level || user.user_metadata?.grade || "AP Physics 1";
 
         const nameDisp = document.getElementById('welcome-name-display');
         const userDisp = document.getElementById('user-display-name');
@@ -81,16 +126,29 @@ async function hydrateProfile(user) {
 
         if (nameDisp) nameDisp.textContent = name.split(' ')[0];
         if (userDisp) userDisp.textContent = name;
-        if (emailDisp) emailDisp.textContent = user.email;
+        if (emailDisp) emailDisp.textContent = user.email || '';
         if (phoneDisp) phoneDisp.textContent = phone;
         if (gradeDisp) gradeDisp.textContent = grade;
+
         if (initialsEl) {
-            const initials = name.split(' ').filter(n => n.length > 0).map(n => n[0]).join('').toUpperCase();
+            const initials = name
+                .split(' ')
+                .filter(n => n.length > 0)
+                .map(n => n[0])
+                .join('')
+                .toUpperCase();
             initialsEl.textContent = initials.slice(0, 2) || 'ST';
         }
     } catch (err) {
-        console.warn("Hydrate error:", err);
+        console.warn("Hydration notice:", err);
     }
+}
+
+function resetProfileUI() {
+    const userDisp = document.getElementById('user-display-name');
+    const initialsEl = document.getElementById('user-avatar-initials');
+    if (userDisp) userDisp.textContent = "Guest Student";
+    if (initialsEl) initialsEl.textContent = "GS";
 }
 
 function bindAuthEvents() {
@@ -112,41 +170,42 @@ function bindAuthEvents() {
             }
 
             displayStatus("Creating account, please wait...");
-            btn.disabled = true;
+            if (btn) btn.disabled = true;
 
             try {
+                // SignUp with metadata — on_auth_user_created database trigger handles profile creation
                 const { data: authData, error: authError } = await supabaseClient.auth.signUp({
                     email,
                     password,
                     options: {
-                        data: { full_name: fullName, mobile, grade }
+                        data: {
+                            full_name: fullName,
+                            mobile: mobile,
+                            grade: grade
+                        }
                     }
                 });
 
                 if (authError) {
                     displayStatus(`Registration Error: ${authError.message}`, true);
-                    btn.disabled = false;
+                    if (btn) btn.disabled = false;
                     return;
                 }
 
                 if (authData?.user) {
-                   // Safely handle profile upsert without .catch()
-try {
-    const { error: dbError } = await supabaseClient
-        .from('profiles')
-        .upsert([{
-            id: authData.user.id,
-            full_name: fullName,
-            mobile_number: mobile,
-            grade_level: grade
-        }]);
-
-    if (dbError) {
-        console.warn("Database notice (trigger may have already handled this):", dbError.message);
-    }
-} catch (dbErr) {
-    console.warn("Upsert skipped:", dbErr);
-}
+                    // Fallback profile sync in case DB triggers are not active
+                    try {
+                        await supabaseClient
+                            .from('profiles')
+                            .upsert([{
+                                id: authData.user.id,
+                                full_name: fullName,
+                                mobile_number: mobile,
+                                grade_level: grade
+                            }]);
+                    } catch (dbErr) {
+                        console.warn("Trigger handled profile or upsert skipped:", dbErr);
+                    }
 
                     regForm.reset();
 
@@ -154,8 +213,9 @@ try {
                         displayStatus("Profile created successfully! Entering portal...");
                         hydrateProfile(authData.user);
                         setTimeout(() => {
-                            document.getElementById('auth-overlay')?.classList.add('hidden');
-                        }, 800);
+                            hideAuthOverlay();
+                            clearStatus();
+                        }, 700);
                     } else {
                         displayStatus("Registration successful! Check your email to confirm registration or sign in.");
                     }
@@ -163,7 +223,7 @@ try {
             } catch (err) {
                 displayStatus(`Unexpected error: ${err.message}`, true);
             } finally {
-                btn.disabled = false;
+                if (btn) btn.disabled = false;
             }
         });
     }
@@ -183,7 +243,7 @@ try {
             }
 
             displayStatus("Verifying credentials...");
-            btn.disabled = true;
+            if (btn) btn.disabled = true;
 
             try {
                 const { data, error } = await supabaseClient.auth.signInWithPassword({
@@ -194,32 +254,32 @@ try {
                 if (error) {
                     displayStatus(`Login Failed: ${error.message}`, true);
                 } else if (data?.user) {
-                    displayStatus("Login successful! Loading student portal...");
+                    displayStatus("Login successful! Loading portal...");
                     await hydrateProfile(data.user);
                     setTimeout(() => {
-                        document.getElementById('auth-overlay')?.classList.add('hidden');
+                        hideAuthOverlay();
                         clearStatus();
-                    }, 600);
+                    }, 500);
                 }
             } catch (err) {
                 displayStatus(`System error: ${err.message}`, true);
             } finally {
-                btn.disabled = false;
+                if (btn) btn.disabled = false;
             }
         });
     }
 }
 
-// Global logout hook for the HTML page
+// Global logout hook accessible across all pages
 window.handleSupabaseLogout = async function() {
     clearStatus();
     if (supabaseClient) {
         try {
             await supabaseClient.auth.signOut();
         } catch (e) {
-            console.log("Signout error:", e);
+            console.warn("Signout error:", e);
         }
     }
-    const btn = document.getElementById('btnRegister');
-    if (btn) btn.disabled = false;
+    resetProfileUI();
+    showAuthOverlay();
 };
