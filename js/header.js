@@ -50,16 +50,16 @@ const LOGO_PATH = 'logo.png'; // Change this once to update the logo everywhere
     <header class="sticky top-0 z-40 bg-physics-dark/95 backdrop-blur-md border-b border-physics-border px-4 lg:px-8 py-3">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
             <a href="index.html" class="flex items-center space-x-3 cursor-pointer">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-physics-cyan to-physics-purple p-0.5 flex items-center justify-center shadow-lg shadow-physics-cyan/20 overflow-hidden">
-                    <div class="w-full h-full bg-physics-dark rounded-[10px] flex items-center justify-center overflow-hidden">
-                        <img src="${LOGO_PATH}" alt="PhysicsRepo Logo" class="w-full h-full object-contain p-0.5">
-                    </div>
-                </div>
-                <div>
-                    <span class="text-lg font-extrabold tracking-wider bg-gradient-to-r from-physics-cyan via-white to-physics-purple bg-clip-text text-transparent">PHYSICS<span class="text-physics-cyan">REPO</span></span>
-                    <span class="hidden sm:inline-block text-[10px] text-gray-400 font-mono ml-2 border-l border-gray-800 pl-2">The Physics Academy</span>
-                </div>
-            </a>
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-physics-cyan to-physics-purple p-0.5 flex items-center justify-center shadow-lg shadow-physics-cyan/20 overflow-hidden shrink-0">
+                <div class="w-full h-full bg-physics-dark rounded-[10px] flex items-center justify-center overflow-hidden">
+                <img src="${LOGO_PATH}" alt="PhysicsRepo Logo" class="w-full h-full object-cover">
+            </div>
+        </div>
+    <div>
+        <span class="text-lg font-extrabold tracking-wider bg-gradient-to-r from-physics-cyan via-white to-physics-purple bg-clip-text text-transparent">PHYSICS<span class="text-physics-cyan">REPO</span></span>
+        <span class="hidden sm:inline-block text-[10px] text-gray-400 font-mono ml-2 border-l border-gray-800 pl-2">The Physics Academy</span>
+    </div>
+        </a>
 
             <nav class="hidden lg:flex items-center space-x-1">
                 ${navLinksHTML}
