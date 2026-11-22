@@ -1,14 +1,21 @@
 /**
  * js/header.js
- * Shared Navigation Header across all PhysicsRepo pages.
- * Update this single file to change the logo, navigation, or header across every page.
+ * Shared Navigation Header & Login Modal Branding across all PhysicsRepo pages.
  */
 
-(function renderSharedHeader() {
+const LOGO_PATH = 'logo.png'; // Change this once to update the logo everywhere
+
+(function renderSharedBranding() {
+    // 1. Update Login Modal Logo (if present on index.html)
+    const authLogoImg = document.getElementById('auth-modal-logo');
+    if (authLogoImg) {
+        authLogoImg.src = LOGO_PATH;
+    }
+
+    // 2. Render Shared Navigation Header
     const placeholder = document.getElementById('shared-header');
     if (!placeholder) return;
 
-    // Detect current filename to highlight the active navigation link
     const path = window.location.pathname;
     const page = path.substring(path.lastIndexOf('/') + 1) || 'index.html';
 
@@ -31,7 +38,6 @@
         return `<a href="${item.href}" class="${classes}"><i class="fa-solid ${item.icon}"></i> ${item.label}</a>`;
     }).join('');
 
-    // Show Logout button on index.html, and Dashboard home button on sub-pages
     const actionButtonHTML = (page === 'index.html' || page === '')
         ? `<button onclick="logout()" title="Log out" class="p-2 rounded-xl bg-gray-900 hover:bg-gray-800 text-gray-400 hover:text-rose-400 border border-gray-800 transition-colors">
                <i class="fa-solid fa-right-from-bracket"></i>
@@ -46,7 +52,7 @@
             <a href="index.html" class="flex items-center space-x-3 cursor-pointer">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-physics-cyan to-physics-purple p-0.5 flex items-center justify-center shadow-lg shadow-physics-cyan/20 overflow-hidden">
                     <div class="w-full h-full bg-physics-dark rounded-[10px] flex items-center justify-center overflow-hidden">
-                        <img src="logo.png" alt="PhysicsRepo Logo" class="w-full h-full object-contain p-0.5">
+                        <img src="${LOGO_PATH}" alt="PhysicsRepo Logo" class="w-full h-full object-contain p-0.5">
                     </div>
                 </div>
                 <div>
